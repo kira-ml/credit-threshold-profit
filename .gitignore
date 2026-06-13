@@ -1,0 +1,38 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (raw files are large, keep only processed if needed)
+data/raw/
+
+# Models (optional — keep if small, ignore if large)
+models/*.pkl
+models/*.joblib
+
+# Outputs (generated figures/tables can be regenerated)
+outputs/*
+!outputs/.gitkeep
