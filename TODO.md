@@ -29,6 +29,7 @@
 | **Random Forest** | ✅ Partially trained | Success on all 4 plans (AUC ~0.999, Brier ~0.002) |
 | **Profit Curves** | ✅ Generated for RF | Optimal threshold consistently 0.94 |
 | **Results DataFrame** | ❌ Empty | No results from LR, so summary fails |
+| **Git History** | ⚠️ Contains large Parquet file | `cleaned_baseline.parquet` (145 MB) still in history, preventing push |
 
 ---
 
@@ -40,6 +41,8 @@
 | 2 | Re-run model training with fix | 🔴 Critical | CLI | 20-30 min |
 | 3 | Validate Logistic Regression training | 🔴 Critical | `model_training.py` | 10 min |
 | 4 | Generate final results summary | 🔴 Critical | `model_training.py` | 5 min |
+| 5 | **Remove large Parquet file from Git history** | 🔴 Critical | CLI (git filter-repo) | 10 min |
+| 6 | **Force push clean history to GitHub** | 🔴 Critical | CLI | 5 min |
 
 ---
 
@@ -86,6 +89,7 @@
 | Missing values (NaN) in features | ❌ Unresolved | Imputation fix should resolve |
 | Logistic Regression failing | ❌ Unresolved | Requires fixed imputation |
 | Results summary failing | ❌ Unresolved | Requires at least one successful training |
+| **Large Parquet file in Git history** | ❌ Unresolved | Use `git filter-repo` on fresh clone |
 
 ---
 
@@ -122,6 +126,9 @@ credit-threshold-profit/
 
 1. **Fix imputation bug** in `model_training.py`
 2. **Re-run model training** to train all 8 combinations
-3. **Generate final results** and profit curves
-4. **Document findings** in README and executive summary
-5. **Push to GitHub** for portfolio
+3. **Remove large Parquet file from Git history** using fresh clone
+4. **Force push clean history** to GitHub
+5. **Generate final results** and profit curves
+6. **Document findings** in README and executive summary
+7. **Push to GitHub** for portfolio
+
