@@ -1,0 +1,330 @@
+================================================================================
+EXPLORATORY DATA ANALYSIS REPORT
+Generated: 2026-06-14 21:08:23
+================================================================================
+
+1. DATASET OVERVIEW
+----------------------------------------
+Total rows: 2,260,701
+Total columns: 151
+Memory usage: 2.52 GB
+
+2. COLUMN INFORMATION
+----------------------------------------
+Column Name                         Type            Non-Null %   Unique
+----------------------------------------------------------------------
+id                                  string          100.0      % 2,260,701
+member_id                           float64         0.0        % 0
+loan_amnt                           float32         100.0      % 1,572
+funded_amnt                         float32         100.0      % 1,572
+funded_amnt_inv                     float64         100.0      % 10,057
+term                                category        100.0      % 2
+int_rate                            float64         100.0      % 673
+installment                         float64         100.0      % 93,301
+grade                               category        100.0      % 7
+sub_grade                           category        100.0      % 35
+emp_title                           string          92.6       % 512,694
+emp_length                          category        93.5       % 11
+home_ownership                      category        100.0      % 6
+annual_inc                          float64         100.0      % 89,368
+verification_status                 category        100.0      % 3
+issue_d                             datetime64[ns]  100.0      % 139
+loan_status                         category        100.0      % 9
+pymnt_plan                          category        100.0      % 2
+url                                 string          100.0      % 2,260,668
+desc                                string          5.6        % 124,500
+purpose                             category        100.0      % 14
+title                               string          99.0       % 63,154
+zip_code                            string          100.0      % 956
+addr_state                          category        100.0      % 51
+dti                                 float64         99.9       % 10,845
+delinq_2yrs                         float32         100.0      % 37
+earliest_cr_line                    datetime64[ns]  100.0      % 754
+fico_range_low                      float32         100.0      % 48
+fico_range_high                     float32         100.0      % 48
+inq_last_6mths                      float32         100.0      % 28
+mths_since_last_delinq              float32         48.8       % 173
+mths_since_last_record              float32         15.9       % 129
+open_acc                            float32         100.0      % 91
+pub_rec                             float32         100.0      % 43
+revol_bal                           float64         100.0      % 102,251
+revol_util                          float64         99.9       % 1,430
+total_acc                           float32         100.0      % 152
+initial_list_status                 category        100.0      % 2
+out_prncp                           float64         100.0      % 356,141
+out_prncp_inv                       float64         100.0      % 368,481
+total_pymnt                         float64         100.0      % 1,633,864
+total_pymnt_inv                     float64         100.0      % 1,311,099
+total_rec_prncp                     float64         100.0      % 486,463
+total_rec_int                       float64         100.0      % 635,921
+total_rec_late_fee                  float64         100.0      % 18,375
+recoveries                          float64         100.0      % 132,777
+collection_recovery_fee             float64         100.0      % 146,222
+last_pymnt_d                        datetime64[ns]  99.9       % 136
+last_pymnt_amnt                     float64         100.0      % 704,467
+next_pymnt_d                        datetime64[ns]  40.5       % 106
+last_credit_pull_d                  datetime64[ns]  100.0      % 141
+last_fico_range_high                float32         100.0      % 72
+last_fico_range_low                 float32         100.0      % 71
+collections_12_mths_ex_med          float32         100.0      % 16
+mths_since_last_major_derog         float32         25.7       % 183
+policy_code                         float32         100.0      % 1
+application_type                    category        100.0      % 2
+annual_inc_joint                    float64         5.3        % 17,633
+dti_joint                           float64         5.3        % 4,018
+verification_status_joint           category        5.1        % 3
+acc_now_delinq                      float32         100.0      % 9
+tot_coll_amt                        float32         96.9       % 15,574
+tot_cur_bal                         float32         96.9       % 487,688
+open_acc_6m                         float32         61.7       % 19
+open_act_il                         float32         61.7       % 54
+open_il_12m                         float32         61.7       % 19
+open_il_24m                         float32         61.7       % 31
+mths_since_rcnt_il                  float32         59.7       % 405
+total_bal_il                        float32         61.7       % 162,249
+il_util                             float32         52.7       % 280
+open_rv_12m                         float32         61.7       % 29
+open_rv_24m                         float32         61.7       % 50
+max_bal_bc                          float32         61.7       % 33,726
+all_util                            float32         61.7       % 188
+total_rev_hi_lim                    float32         96.9       % 34,220
+inq_fi                              float32         61.7       % 33
+total_cu_tl                         float32         61.7       % 62
+inq_last_12m                        float32         61.7       % 48
+acc_open_past_24mths                float32         97.8       % 57
+avg_cur_bal                         float32         96.9       % 88,597
+bc_open_to_buy                      float32         96.7       % 91,500
+bc_util                             float64         96.6       % 1,494
+chargeoff_within_12_mths            float32         100.0      % 11
+delinq_amnt                         float32         100.0      % 2,617
+mo_sin_old_il_acct                  float32         93.8       % 566
+mo_sin_old_rev_tl_op                float32         96.9       % 787
+mo_sin_rcnt_rev_tl_op               float32         96.9       % 333
+mo_sin_rcnt_tl                      float32         96.9       % 232
+mort_acc                            float32         97.8       % 47
+mths_since_recent_bc                float32         96.8       % 546
+mths_since_recent_bc_dlq            float32         23.0       % 177
+mths_since_recent_inq               float32         86.9       % 26
+mths_since_recent_revol_delinq      float32         32.7       % 179
+num_accts_ever_120_pd               float32         96.9       % 44
+num_actv_bc_tl                      float32         96.9       % 42
+num_actv_rev_tl                     float32         96.9       % 57
+num_bc_sats                         float32         97.4       % 60
+num_bc_tl                           float32         96.9       % 76
+num_il_tl                           float32         96.9       % 122
+num_op_rev_tl                       float32         96.9       % 81
+num_rev_accts                       float32         96.9       % 117
+num_rev_tl_bal_gt_0                 float32         96.9       % 50
+num_sats                            float32         97.4       % 91
+num_tl_120dpd_2m                    float32         93.2       % 7
+num_tl_30dpd                        float32         96.9       % 5
+num_tl_90g_dpd_24m                  float32         96.9       % 34
+num_tl_op_past_12m                  float32         96.9       % 33
+pct_tl_nvr_dlq                      float64         96.9       % 690
+percent_bc_gt_75                    float64         96.7       % 284
+pub_rec_bankruptcies                float32         99.9       % 12
+tax_liens                           float32         100.0      % 42
+tot_hi_cred_lim                     float32         96.9       % 529,972
+total_bal_ex_mort                   float32         97.8       % 212,777
+total_bc_limit                      float32         97.8       % 20,309
+total_il_high_credit_limit          float32         96.9       % 194,137
+revol_bal_joint                     float32         4.8        % 56,875
+sec_app_fico_range_low              float32         4.8        % 62
+sec_app_fico_range_high             float32         4.8        % 62
+sec_app_earliest_cr_line            string          4.8        % 663
+sec_app_inq_last_6mths              float32         4.8        % 7
+sec_app_mort_acc                    float32         4.8        % 23
+sec_app_open_acc                    float32         4.8        % 67
+sec_app_revol_util                  float64         4.7        % 1,216
+sec_app_open_act_il                 float32         4.8        % 40
+sec_app_num_rev_accts               float32         4.8        % 86
+sec_app_chargeoff_within_12_mths    float32         4.8        % 22
+sec_app_collections_12_mths_ex_med  float32         4.8        % 18
+sec_app_mths_since_last_major_derog float32         1.6        % 140
+hardship_flag                       boolean         0.0        % 0
+hardship_type                       category        0.5        % 1
+hardship_reason                     category        0.5        % 9
+hardship_status                     category        0.5        % 3
+deferral_term                       float32         0.5        % 1
+hardship_amount                     float64         0.5        % 9,162
+hardship_start_date                 datetime64[ns]  0.5        % 27
+hardship_end_date                   datetime64[ns]  0.5        % 28
+payment_plan_start_date             datetime64[ns]  0.5        % 27
+hardship_length                     float32         0.5        % 1
+hardship_dpd                        float32         0.5        % 34
+hardship_loan_status                category        0.5        % 5
+orig_projected_additional_accrued_interest float64         0.4        % 7,487
+hardship_payoff_balance_amount      float64         0.5        % 10,893
+hardship_last_payment_amount        float64         0.5        % 9,045
+disbursement_method                 category        100.0      % 2
+debt_settlement_flag                boolean         0.0        % 0
+debt_settlement_flag_date           datetime64[ns]  1.5        % 83
+settlement_status                   category        1.5        % 3
+settlement_date                     datetime64[ns]  1.5        % 90
+settlement_amount                   float64         1.5        % 21,941
+settlement_percentage               float64         1.5        % 2,070
+settlement_term                     float32         1.5        % 40
+
+3. MISSING DATA ANALYSIS
+----------------------------------------
+Columns with >50% missing: 46
+Columns with 20-50% missing: 14
+Columns with <20% missing: 91
+
+Top 10 columns with highest missing rates:
+  • hardship_flag: 100.0% missing
+  • member_id: 100.0% missing
+  • debt_settlement_flag: 100.0% missing
+  • orig_projected_additional_accrued_interest: 99.6% missing
+  • hardship_length: 99.5% missing
+  • hardship_type: 99.5% missing
+  • hardship_reason: 99.5% missing
+  • hardship_status: 99.5% missing
+  • deferral_term: 99.5% missing
+  • hardship_amount: 99.5% missing
+
+4. DUPLICATE ANALYSIS
+----------------------------------------
+Duplicate rows: 0 (0.00%)
+
+5. NUMERIC COLUMNS STATISTICS (113 columns)
+----------------------------------------
+
+Summary statistics (selected percentiles):
+       member_id   loan_amnt  funded_amnt  funded_amnt_inv    int_rate  installment    annual_inc         dti  delinq_2yrs  fico_range_low  fico_range_high  inq_last_6mths  mths_since_last_delinq  mths_since_last_record    open_acc     pub_rec   revol_bal  revol_util   total_acc   out_prncp  out_prncp_inv  total_pymnt  total_pymnt_inv  total_rec_prncp  total_rec_int  total_rec_late_fee  recoveries  collection_recovery_fee  last_pymnt_amnt  last_fico_range_high  last_fico_range_low  collections_12_mths_ex_med  mths_since_last_major_derog  policy_code  annual_inc_joint  dti_joint  acc_now_delinq  tot_coll_amt  tot_cur_bal  open_acc_6m  open_act_il  open_il_12m  open_il_24m  mths_since_rcnt_il  total_bal_il     il_util  open_rv_12m  open_rv_24m  max_bal_bc    all_util  total_rev_hi_lim      inq_fi  total_cu_tl  inq_last_12m  acc_open_past_24mths  avg_cur_bal  bc_open_to_buy     bc_util  chargeoff_within_12_mths  delinq_amnt  mo_sin_old_il_acct  mo_sin_old_rev_tl_op  mo_sin_rcnt_rev_tl_op  mo_sin_rcnt_tl    mort_acc  mths_since_recent_bc  mths_since_recent_bc_dlq  mths_since_recent_inq  mths_since_recent_revol_delinq  num_accts_ever_120_pd  num_actv_bc_tl  num_actv_rev_tl  num_bc_sats   num_bc_tl   num_il_tl  num_op_rev_tl  num_rev_accts  num_rev_tl_bal_gt_0    num_sats  num_tl_120dpd_2m  num_tl_30dpd  num_tl_90g_dpd_24m  num_tl_op_past_12m  pct_tl_nvr_dlq  percent_bc_gt_75  pub_rec_bankruptcies   tax_liens  tot_hi_cred_lim  total_bal_ex_mort  total_bc_limit  total_il_high_credit_limit  revol_bal_joint  sec_app_fico_range_low  sec_app_fico_range_high  sec_app_inq_last_6mths  sec_app_mort_acc  sec_app_open_acc  sec_app_revol_util  sec_app_open_act_il  sec_app_num_rev_accts  sec_app_chargeoff_within_12_mths  sec_app_collections_12_mths_ex_med  sec_app_mths_since_last_major_derog  deferral_term  hardship_amount  hardship_length  hardship_dpd  orig_projected_additional_accrued_interest  hardship_payoff_balance_amount  hardship_last_payment_amount  settlement_amount  settlement_percentage  settlement_term
+count        0.0  2260668.00   2260668.00       2260668.00  2260668.00   2260668.00  2.260664e+06  2258957.00   2260639.00      2260668.00       2260668.00      2260638.00              1102166.00               359156.00  2260639.00  2260639.00  2260668.00  2258866.00  2260639.00  2260668.00     2260668.00   2260668.00       2260668.00       2260668.00     2260668.00          2260668.00  2260668.00               2260668.00       2260668.00            2260668.00           2260668.00                  2260523.00                    580775.00    2260668.0         120710.00  120706.00      2260639.00    2190392.00   2190392.00   1394538.00   1394539.00   1394539.00   1394539.00          1350744.00    1394539.00  1191818.00   1394539.00   1394539.00  1394539.00  1394320.00        2190392.00  1394539.00   1394538.00    1394538.00            2210638.00   2190322.00      2185733.00  2184597.00                2260523.00   2260639.00          2121597.00            2190391.00             2190391.00      2190392.00  2210638.00            2187256.00                 519701.00             1965233.00                       740359.00             2190392.00      2190392.00       2190392.00   2202078.00  2190392.00  2190392.00     2190392.00     2190391.00           2190392.00  2202078.00        2107011.00    2190392.00          2190392.00          2190392.00      2190237.00        2185289.00            2259303.00  2260563.00       2190392.00         2210638.00      2210638.00                  2190392.00        108020.00               108021.00                108021.00               108021.00         108021.00         108021.00           106184.00            108021.00              108021.00                         108021.00                           108021.00                             35942.00        10917.0         10917.00          10917.0      10917.00                                     8651.00                        10917.00                      10917.00           34246.00               34246.00         34246.00
+mean         NaN    15046.93     15041.67         15023.44       13.09       445.81  7.799243e+04       18.82         0.31          698.59           702.59            0.58                   34.54                   72.31       11.61        0.20    16658.46       50.34       24.16     4206.89        4205.97     12082.56         12064.39          9505.77        2431.39                1.52      143.88                    23.98          3429.35                687.66               675.54                        0.02                        44.16          1.0         123624.64      19.25            0.00        232.73    142492.14         0.93         2.78         0.68         1.56               21.22      35506.64       69.14         1.29         2.75     5806.39       57.03          34573.95        1.01         1.48          2.04                  4.52     13547.80        11394.26       57.90                      0.01        12.37              125.74                181.49                  14.02            8.30        1.56                 24.84                     39.30                   7.02                           35.78                   0.50            3.68             5.63         4.77        7.73        8.41           8.25          14.00                 5.58       11.63              0.00          0.00                0.08                2.08           94.11             42.44                  0.13        0.05        178242.70           51022.94        23193.78                    43732.02         33617.29                  669.76                   673.76                    0.63              1.54             11.47               58.17                 3.01                  12.53                              0.05                                0.08                                36.94            3.0           155.05              3.0         13.74                                      454.80                        11636.88                        193.99            5010.66                  47.78            13.19
+std          NaN     9190.25      9188.41          9192.33        4.83       267.17  1.126962e+05       14.18         0.87           33.01            33.01            0.89                   21.90                   26.46        5.64        0.57    22948.31       24.71       11.99     7343.24        7342.33      9901.38          9896.99          8321.85        2679.74               11.84      748.16                   131.23          6018.25                 72.97               111.10                        0.15                        21.53          0.0          74161.35       7.82            0.07       8518.46    160692.64         1.14         3.00         0.93         1.58               26.05      44097.46       23.75         1.51         2.60     5690.56       20.90          36728.50        1.49         2.67          2.38                  3.16     16474.08        16599.54       28.58                      0.10       726.46               53.38                 97.12                  17.53            9.21        1.90                 32.32                     22.62                   5.97                           22.31                   1.35            2.32             3.38         3.04        4.70        7.36           4.68           8.04                 3.29        5.64              0.03          0.06                0.49                1.83            9.04             36.22                  0.36        0.38        181574.81           49911.23        23006.56                    45072.98         28153.88                   44.73                    44.73                    0.99              1.76              6.63               25.55                 3.28                   8.15                              0.41                                0.41                                23.92            0.0           129.04              0.0          9.67                                      375.39                         7625.99                        198.63            3693.12                   7.31             8.16
+min          NaN      500.00       500.00             0.00        5.31         4.93  0.000000e+00       -1.00         0.00          610.00           614.00            0.00                    0.00                    0.00        0.00        0.00        0.00        0.00        1.00        0.00           0.00         0.00             0.00             0.00           0.00               -0.00        0.00                     0.00             0.00                  0.00                 0.00                        0.00                         0.00          1.0           5693.51       0.00            0.00          0.00         0.00         0.00         0.00         0.00         0.00                0.00          0.00        0.00         0.00         0.00        0.00        0.00              0.00        0.00         0.00          0.00                  0.00         0.00            0.00        0.00                      0.00         0.00                0.00                  1.00                   0.00            0.00        0.00                  0.00                      0.00                   0.00                            0.00                   0.00            0.00             0.00         0.00        0.00        0.00           0.00           0.00                 0.00        0.00              0.00          0.00                0.00                0.00            0.00              0.00                  0.00        0.00             0.00               0.00            0.00                        0.00             0.00                  540.00                   544.00                    0.00              0.00              0.00                0.00                 0.00                   0.00                              0.00                                0.00                                 0.00            3.0             0.64              3.0          0.00                                        1.92                           55.73                          0.01              44.21                   0.20             0.00
+1%           NaN     1525.00      1516.75          1500.00        5.32        53.46  1.680000e+04        1.72         0.00          660.00           664.00            0.00                    2.00                    7.00        3.00        0.00      126.00        0.90        5.00        0.00           0.00       586.18           576.15           330.07          47.66                0.00        0.00                     0.00             7.50                499.00                 0.00                        0.00                         4.00          1.0          36343.79       3.38            0.00          0.00      2692.00         0.00         0.00         0.00         0.00                1.00          0.00        5.00         0.00         0.00        0.00        7.00           2600.00        0.00         0.00          0.00                  0.00       426.00            0.00        0.00                      0.00         0.00               11.00                 28.00                   0.00            0.00        0.00                  1.00                      2.00                   0.00                            2.00                   0.00            0.00             1.00         0.00        1.00        0.00           2.00           3.00                 1.00        3.00              0.00          0.00                0.00                0.00           60.00              0.00                  0.00        0.00          8200.00            2028.00            0.00                        0.00          1601.00                  555.00                   559.00                    0.00              0.00              1.00                0.00                 0.00                   1.00                              0.00                                0.00                                 0.00            3.0            10.41              3.0          0.00                                       30.09                         1015.05                          0.06             382.00                  30.02             0.00
+5%           NaN     3250.00      3250.00          3200.00        6.49       110.43  2.760000e+04        4.94         0.00          660.00           664.00            0.00                    5.00                   24.00        5.00        0.00     1572.00        9.40        8.00        0.00           0.00      1362.37          1352.57           829.55         201.82                0.00        0.00                     0.00           100.54                539.00               535.00                        0.00                        10.00          1.0          53310.09       6.99            0.00          0.00      8195.55         0.00         0.00         0.00         0.00                2.00          0.00       25.00         0.00         0.00      340.00       21.00           6000.00        0.00         0.00          0.00                  1.00      1072.00          162.00        7.70                      0.00         0.00               31.00                 49.00                   1.00            1.00        0.00                  2.00                      6.00                   0.00                            5.00                   0.00            1.00             2.00         1.00        2.00        1.00           3.00           4.00                 2.00        5.00              0.00          0.00                0.00                0.00           75.00              0.00                  0.00        0.00         18830.00            6556.85         2300.00                        0.00          5358.00                  595.00                   599.00                    0.00              0.00              3.00               12.40                 0.00                   3.00                              0.00                                0.00                                 2.00            3.0            21.07              3.0          0.00                                       62.13                         2183.71                          0.37             780.00                  40.00             0.00
+25%          NaN     8000.00      8000.00          8000.00        9.49       251.65  4.600000e+04       11.89         0.00          675.00           679.00            0.00                   16.00                   55.00        8.00        0.00     5950.00       31.50       15.00        0.00           0.00      4546.46          4531.80          3000.00         728.19                0.00        0.00                     0.00           310.33                654.00               650.00                        0.00                        27.00          1.0          83400.00      13.53            0.00          0.00     29092.00         0.00         1.00         0.00         0.00                7.00       8695.00       55.00         0.00         1.00     2284.00       43.00          14700.00        0.00         0.00          0.00                  2.00      3080.00         1722.00       35.40                      0.00         0.00               96.00                116.00                   4.00            3.00        0.00                  6.00                     21.00                   2.00                           17.00                   0.00            2.00             3.00         3.00        4.00        3.00           5.00           8.00                 3.00        8.00              0.00          0.00                0.00                1.00           91.30              0.00                  0.00        0.00         50731.00           20892.00         8300.00                    15000.00         15106.75                  645.00                   649.00                    0.00              0.00              7.00               39.80                 1.00                   7.00                              0.00                                0.00                                16.00            3.0            59.44              3.0          5.00                                      175.23                         5627.00                         44.44            2208.00                  45.00             6.00
+50%          NaN    12900.00     12875.00         12800.00       12.62       377.99  6.500000e+04       17.84         0.00          690.00           694.00            0.00                   31.00                   74.00       11.00        0.00    11324.00       50.30       22.00        0.00           0.00      9329.72          9309.67          7000.00        1525.94                0.00        0.00                     0.00           600.57                699.00               695.00                        0.00                        44.00          1.0         110000.00      18.84            0.00          0.00     79240.00         1.00         2.00         0.00         1.00               13.00      23127.00       72.00         1.00         2.00     4413.00       58.00          25400.00        1.00         0.00          1.00                  4.00      7335.00         5442.00       60.20                      0.00         0.00              130.00                164.00                   8.00            6.00        1.00                 14.00                     37.00                   5.00                           33.00                   0.00            3.00             5.00         4.00        7.00        6.00           7.00          12.00                 5.00       11.00              0.00          0.00                0.00                2.00          100.00             37.50                  0.00        0.00        114298.50           37864.00        16300.00                    32696.00         26516.50                  670.00                   674.00                    0.00              1.00             10.00               60.20                 2.00                  11.00                              0.00                                0.00                                36.00            3.0           119.14              3.0         15.00                                      352.77                        10028.39                        133.16            4146.11                  45.00            14.00
+75%          NaN    20000.00     20000.00         20000.00       15.99       593.32  9.300000e+04       24.49         0.00          715.00           719.00            1.00                   50.00                   92.00       14.00        0.00    20246.00       69.40       31.00     6149.94        6146.31     16940.87         16916.71         13899.10        3108.06                0.00        0.00                     0.00          3743.75                734.00               730.00                        0.00                        62.00          1.0         147995.00      24.62            0.00          0.00    213204.00         1.00         3.00         1.00         2.00               24.00      46095.00       86.00         2.00         4.00     7598.00       72.00          43200.00        1.00         2.00          3.00                  6.00     18783.00        14187.00       83.10                      0.00         0.00              154.00                232.00                  17.00           11.00        3.00                 30.00                     57.00                  11.00                           51.00                   0.00            5.00             7.00         6.00       10.00       11.00          10.00          18.00                 7.00       14.00              0.00          0.00                0.00                3.00          100.00             71.40                  0.00        0.00        257755.00           64350.00        30300.00                    58804.25         43769.00                  695.00                   699.00                    1.00              2.00             15.00               78.60                 4.00                  17.00                              0.00                                0.00                                56.00            3.0           213.26              3.0         22.00                                      620.17                        16151.89                        284.19            6850.17                  50.00            18.00
+95%          NaN    35000.00     35000.00         35000.00       22.15       984.47  1.600000e+05       33.88         2.00          765.00           769.00            2.00                   74.00                  113.00       22.00        1.00    45164.00       91.00       46.00    21077.13       21076.00     32824.63         32803.40         27575.00        7821.41                0.00      892.54                   134.15         16926.71                794.00               790.00                        0.00                        77.00          1.0         230975.00      33.03            0.00        786.00    441856.44         3.00         9.00         2.00         5.00               72.00     113501.10      101.00         4.00         8.00    16311.00       90.00          91100.00        4.00         7.00          7.00                 10.00     43578.00        42800.00       97.80                      0.00         0.00              213.00                369.00                  46.00           24.00        5.00                 89.00                     77.00                  19.00                           76.00                   3.00            8.00            12.00        10.00       17.00       23.00          17.00          29.00                12.00       22.00              0.00          0.00                1.00                5.00          100.00            100.00                  1.00        0.00        510883.81          138768.16        67300.00                   125348.45         85002.05                  745.00                   749.00                    3.00              5.00             24.00               95.90                 9.00                  28.00                              0.00                                1.00                                76.00            3.0           411.06              3.0         28.00                                     1189.01                        26860.88                        596.33           12351.30                  60.01            24.00
+99%          NaN    40000.00     40000.00         40000.00       26.77      1238.46  2.700000e+05       42.71         4.00          805.00           809.00            4.00                   81.00                  118.00       30.00        2.00    97929.98       98.10       60.00    31772.77       31772.77     42836.24         42811.83         35000.00       13090.85               43.21     3453.88                   598.50         28230.87                819.00               815.00                        1.00                        84.00          1.0         350000.00      37.67            0.00       4672.00    688045.00         5.00        15.00         4.00         7.00              135.00     211283.23      120.00         6.00        12.00    24958.00      102.00         163500.00        7.00        12.00         11.00                 15.00     74472.00        79368.00      100.60                      0.00         0.00              275.00                479.00                  90.00           44.00        8.00                154.00                     84.00                  23.00                           82.00                   6.00           11.00            17.00        15.00       23.00       35.00          24.00          40.00                16.00       30.00              0.00          0.00                2.00                8.00          100.00            100.00                  1.00        1.00        786922.25          244696.89       110100.00                   212334.45        135777.83                  785.00                   789.00                    4.00              7.00             32.00              100.70                17.00                  39.00                              1.00                                2.00                                84.00            3.0           599.97              3.0         29.00                                     1731.21                        32746.23                        877.00           16691.30                  65.07            24.00
+max          NaN    40000.00     40000.00         40000.00       30.99      1719.83  1.100000e+08      999.00        58.00          845.00           850.00           33.00                  226.00                  129.00      101.00       86.00  2904836.00      892.30      176.00    40000.00       40000.00     63296.88         63296.88         40000.00       28192.50             1484.34    39859.55                  7174.72         42192.05                850.00               845.00                       20.00                       226.00          1.0        7874821.00      69.49           14.00    9152545.00   9971659.00        18.00        57.00        25.00        51.00              511.00    1837038.00     1000.00        28.00        60.00  1170668.00      239.00        9999999.00       48.00       111.00         67.00                 64.00    958084.00       711140.00      339.60                     10.00    249925.00              999.00                999.00                 547.00          382.00       94.00                661.00                    202.00                  25.00                          202.00                  58.00           50.00            72.00        71.00       86.00      159.00          91.00         151.00                65.00      101.00              7.00          4.00               58.00               32.00          100.00            100.00                 12.00       85.00       9999999.00         3408095.00      1569000.00                  2118996.00       1110019.00                  845.00                   850.00                    6.00             27.00             82.00              434.30                43.00                 106.00                             21.00                               23.00                               185.00            3.0           943.94              3.0         37.00                                     2680.89                        40306.41                       1407.86           33601.00                 521.35           181.00
+
+6. OUTLIER DETECTION (IQR Method)
+----------------------------------------
+Top 10 columns with highest outlier percentages:
+  1. num_accts_ever_120_pd: 22.2% outliers
+     Range (IQR): [0.00, 0.00]
+  2. delinq_2yrs: 18.6% outliers
+     Range (IQR): [0.00, 0.00]
+  3. pub_rec: 15.8% outliers
+     Range (IQR): [0.00, 0.00]
+  4. tot_coll_amt: 14.8% outliers
+     Range (IQR): [0.00, 0.00]
+  5. last_pymnt_amnt: 13.9% outliers
+     Range (IQR): [-4839.80, 8893.88]
+  6. pub_rec_bankruptcies: 12.0% outliers
+     Range (IQR): [0.00, 0.00]
+  7. out_prncp_inv: 9.4% outliers
+     Range (IQR): [-9219.47, 15365.78]
+  8. out_prncp: 9.4% outliers
+     Range (IQR): [-9224.91, 15374.85]
+  9. mths_since_recent_bc: 8.2% outliers
+     Range (IQR): [-30.00, 66.00]
+  10. recoveries: 8.2% outliers
+     Range (IQR): [0.00, 0.00]
+
+7. CATEGORICAL COLUMNS ANALYSIS (26 columns)
+----------------------------------------
+
+id:
+  Unique values: 2260701
+  Top 5 categories:
+    • 68407277: 1 (0.0%)
+    • 134840815: 1 (0.0%)
+    • 134799148: 1 (0.0%)
+    • 134288565: 1 (0.0%)
+    • 134852755: 1 (0.0%)
+
+term:
+  Unique values: 2
+  Top 5 categories:
+    •  36 months: 1,609,754 (71.2%)
+    •  60 months: 650,914 (28.8%)
+
+grade:
+  Unique values: 7
+  Top 5 categories:
+    • B: 663,557 (29.4%)
+    • C: 650,053 (28.8%)
+    • A: 433,027 (19.2%)
+    • D: 324,424 (14.4%)
+    • E: 135,639 (6.0%)
+
+sub_grade:
+  Unique values: 35
+  Top 5 categories:
+    • C1: 145,903 (6.5%)
+    • B5: 140,288 (6.2%)
+    • B4: 139,793 (6.2%)
+    • B3: 131,514 (5.8%)
+    • C2: 131,116 (5.8%)
+
+emp_title:
+  Unique values: 512694
+  Top 5 categories:
+    • Teacher: 38,824 (1.7%)
+    • Manager: 34,298 (1.5%)
+    • Owner: 21,977 (1.0%)
+    • Registered Nurse: 15,867 (0.7%)
+    • Driver: 14,753 (0.7%)
+
+emp_length:
+  Unique values: 11
+  Top 5 categories:
+    • 10+ years: 748,005 (33.1%)
+    • 2 years: 203,677 (9.0%)
+    • < 1 year: 189,988 (8.4%)
+    • 3 years: 180,753 (8.0%)
+    • 1 year: 148,403 (6.6%)
+
+home_ownership:
+  Unique values: 6
+  Top 5 categories:
+    • MORTGAGE: 1,111,450 (49.2%)
+    • RENT: 894,929 (39.6%)
+    • OWN: 253,057 (11.2%)
+    • ANY: 996 (0.0%)
+    • OTHER: 182 (0.0%)
+
+verification_status:
+  Unique values: 3
+  Top 5 categories:
+    • Source Verified: 886,231 (39.2%)
+    • Not Verified: 744,806 (32.9%)
+    • Verified: 629,631 (27.9%)
+
+loan_status:
+  Unique values: 9
+  Top 5 categories:
+    • Fully Paid: 1,076,751 (47.6%)
+    • Current: 878,317 (38.9%)
+    • Charged Off: 268,559 (11.9%)
+    • Late (31-120 days): 21,467 (0.9%)
+    • In Grace Period: 8,436 (0.4%)
+
+pymnt_plan:
+  Unique values: 2
+  Top 5 categories:
+    • n: 2,260,048 (100.0%)
+    • y: 620 (0.0%)
+
+8. TARGET VARIABLE ANALYSIS (loan_status)
+----------------------------------------
+Loan status distribution:
+  • Fully Paid: 1,076,751 (47.6%)
+  • Current: 878,317 (38.9%)
+  • Charged Off: 268,559 (11.9%)
+  • Late (31-120 days): 21,467 (0.9%)
+  • In Grace Period: 8,436 (0.4%)
+  • Late (16-30 days): 4,349 (0.2%)
+  • Does not meet the credit policy. Status:Fully Paid: 1,988 (0.1%)
+  • Does not meet the credit policy. Status:Charged Off: 761 (0.0%)
+  • Default: 40 (0.0%)
+
+→ Dataset has 9 classes - consider multi-class or binary mapping

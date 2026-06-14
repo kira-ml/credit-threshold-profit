@@ -36,3 +36,5 @@ models/*.joblib
 # Outputs (generated figures/tables can be regenerated)
 outputs/*
 !outputs/.gitkeep
+
+csv_to_parquet_conversion.log
