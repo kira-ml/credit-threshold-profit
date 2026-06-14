@@ -168,6 +168,8 @@ def baseline_cleaning_pipeline(
     df = impute_missing_values(df)
     df = remove_outliers(df)
     df = drop_correlated_duplicates(df)
+    df['profit'] = 0.0
+    logger.info("Added placeholder profit column (will be filled by profit_calculator)")
     
     # Final stats
     logger.info("=" * 60)

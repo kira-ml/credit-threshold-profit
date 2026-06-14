@@ -272,33 +272,33 @@ def calculate_profits(
 
 
 def main():
-    """Example usage"""
+    """Main execution with profit merging"""
     # Load cleaned data
     input_path = Path(r"D:\credit-threshold-profit\data\processed\cleaned_baseline.parquet")
     df = pd.read_parquet(input_path)
+    logger.info(f"Loaded {len(df):,} rows from cleaned baseline")
     
-    # Example 1: Baseline method
+    # Calculate profits (baseline method)
     config_baseline = create_profit_config(method="baseline", verbose=True)
-    df_baseline = calculate_profits(df, config_baseline)
+    df_profit = calculate_profits(df, config_baseline)
     
-    # Example 2: Advanced method (if columns exist)
-    config_advanced = create_profit_config(method="advanced", verbose=True)
-    try:
-        df_advanced = calculate_profits(df, config_advanced)
-    except Exception as e:
-        logger.warning(f"Advanced method failed: {e}")
+    # MERGE PROFIT BACK INTO CLEANED BASELINE
+    logger.info("Merging profit column into cleaned baseline...")
+    df['profit'] = df_profit['profit']
+    df.to_parquet(input_path, index=False)
+    logger.info(f"✅ Profit column added to {input_path}")
     
-    # Example 3: Hybrid method (auto-fallback)
-    config_hybrid = create_profit_config(method="hybrid", verbose=True)
-    df_hybrid = calculate_profits(df, config_hybrid)
-    
-    # Save results
+    # Also save profit-only file for reference
     output_dir = Path(r"D:\credit-threshold-profit\data\processed")
-    df_baseline.to_parquet(output_dir / "profits_baseline.parquet", index=False)
-    df_hybrid.to_parquet(output_dir / "profits_hybrid.parquet", index=False)
+    df_profit.to_parquet(output_dir / "profits_baseline.parquet", index=False)
     
-    logger.info("All profit calculations saved")
+    logger.info("Profit calculation complete and merged to cleaned baseline")
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
+    

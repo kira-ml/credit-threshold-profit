@@ -2,6 +2,7 @@
 venv/
 env/
 .venv/
+envs/
 
 # Python
 __pycache__/
@@ -11,6 +12,11 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+*.pkl
+*.joblib
+*.pickle
+*.npy
+*.npz
 
 # Jupyter
 .ipynb_checkpoints/
@@ -21,20 +27,58 @@ build/
 .idea/
 *.swp
 *.swo
+*.swn
+*.swn
 
 # OS
 .DS_Store
 Thumbs.db
+.directory
+*.bak
+*.tmp
 
-# Data (raw files are large, keep only processed if needed)
+# Data files (Parquet, CSV, Feather - keep only raw if needed)
 data/raw/
+data/processed/*.parquet
+data/processed/*.feather
+data/processed/*.csv
+!data/processed/.gitkeep
 
-# Models (optional — keep if small, ignore if large)
+
+# Model outputs (too large for git)
 models/*.pkl
 models/*.joblib
+models/*.pickle
+models/*.h5
 
-# Outputs (generated figures/tables can be regenerated)
-outputs/*
-!outputs/.gitkeep
+# Reports & generated images
+reports/eda/*.png
+reports/model_comparison/*.png
+reports/model_comparison/*.csv
+reports/model_comparison/*.json
+!reports/.gitkeep
 
-csv_to_parquet_conversion.log
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# VS Code workspace settings
+.vscode/workspace.json
+.vscode/settings.json
+
+# Project specific
+*.parquet
+*.feather
+*.csv
+*.db
+*.sqlite
+
+# Temporary files
+tmp/
+temp/
+*.tmp
