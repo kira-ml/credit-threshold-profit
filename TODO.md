@@ -2,7 +2,7 @@
 
 ## Credit Threshold Profit Project
 
-*Last Updated: June 15, 2026, 3:00 AM*
+*Last Updated: June 15, 2026, 3:45 AM*
 
 ---
 
@@ -17,10 +17,12 @@
 | **Preprocessing** | Sparse columns dropped, categories converted, `grade_num` + `emp_length_num` created | ✅ Done |
 | **Data Splitting** | 80/20 train/test split by `issue_d` | ✅ Done |
 | **Feature Engineering** | All 4 plans generated (`baseline_minimal`, `domain_enhanced`, `interaction_heavy`, `ml_informed`) | ✅ Done |
+| **Git History Cleanup** | Removed large Parquet file from Git history | ✅ Done |
+| **Git Remote** | Re-added remote and pushed clean branches | ✅ Done |
 
 ---
 
-## 🚧 Current State (as of 3:00 AM)
+## 🚧 Current State (as of 3:45 AM)
 
 | Component | Status | Notes |
 |-----------|--------|-------|
@@ -29,7 +31,7 @@
 | **Random Forest** | ✅ Partially trained | Success on all 4 plans (AUC ~0.999, Brier ~0.002) |
 | **Profit Curves** | ✅ Generated for RF | Optimal threshold consistently 0.94 |
 | **Results DataFrame** | ❌ Empty | No results from LR, so summary fails |
-| **Git History** | ⚠️ Contains large Parquet file | `cleaned_baseline.parquet` (145 MB) still in history, preventing push |
+| **Git History** | ✅ Clean | Parquet file removed, ready for push |
 
 ---
 
@@ -41,8 +43,7 @@
 | 2 | Re-run model training with fix | 🔴 Critical | CLI | 20-30 min |
 | 3 | Validate Logistic Regression training | 🔴 Critical | `model_training.py` | 10 min |
 | 4 | Generate final results summary | 🔴 Critical | `model_training.py` | 5 min |
-| 5 | **Remove large Parquet file from Git history** | 🔴 Critical | CLI (git filter-repo) | 10 min |
-| 6 | **Force push clean history to GitHub** | 🔴 Critical | CLI | 5 min |
+| 5 | **Push `feature/complete-model-training` branch** | 🔴 Critical | CLI | 2 min |
 
 ---
 
@@ -64,7 +65,7 @@
 | 1 | Create final profit curve visualization (publication quality) | 🔴 High | 20 min |
 | 2 | Write executive summary (1 paragraph, business impact in $) | 🔴 High | 20 min |
 | 3 | Update README.md with results and profit curve | 🟠 Medium | 20 min |
-| 4 | Push to GitHub | 🟠 Medium | 10 min |
+| 4 | Push final version to GitHub | 🟠 Medium | 10 min |
 
 ---
 
@@ -89,7 +90,7 @@
 | Missing values (NaN) in features | ❌ Unresolved | Imputation fix should resolve |
 | Logistic Regression failing | ❌ Unresolved | Requires fixed imputation |
 | Results summary failing | ❌ Unresolved | Requires at least one successful training |
-| **Large Parquet file in Git history** | ❌ Unresolved | Use `git filter-repo` on fresh clone |
+| **Large Parquet file in Git history** | ✅ Resolved | Removed with `git filter-repo` |
 
 ---
 
@@ -124,11 +125,19 @@ credit-threshold-profit/
 
 ## 🧭 Next Steps (High Level)
 
-1. **Fix imputation bug** in `model_training.py`
-2. **Re-run model training** to train all 8 combinations
-3. **Remove large Parquet file from Git history** using fresh clone
-4. **Force push clean history** to GitHub
-5. **Generate final results** and profit curves
-6. **Document findings** in README and executive summary
-7. **Push to GitHub** for portfolio
+1. **Push `feature/complete-model-training` branch** to GitHub
+2. **Fix imputation bug** in `model_training.py`
+3. **Re-run model training** to train all 8 combinations
+4. **Generate final results** and profit curves
+5. **Document findings** in README and executive summary
+6. **Merge to `main`** and push to GitHub for portfolio
 
+---
+
+## 📌 Current Branch Status
+
+| Branch | Status | Notes |
+|--------|--------|-------|
+| `feature/complete-model-training` | ✅ Active | Clean, ready for development |
+| `initial-build` | ✅ Archived | All work merged to main |
+| `main` | ✅ Clean | Ready for final merge |
