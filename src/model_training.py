@@ -79,89 +79,99 @@ class ModelTrainer:
     def load_data(self, plan: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
         """
         Load train and test data for a feature plan.
-        
+    
         Args:
             plan: Feature plan name
-            
+        
         Returns:
             Tuple of (X_train, X_test, y_train, y_test)
         """
         data_dir = Path(self.config.get('data_dir', 'data/processed'))
-        
+    
         train_path = data_dir / f"train_engineered_{plan}.parquet"
         test_path = data_dir / f"test_engineered_{plan}.parquet"
-        
+    
         if not train_path.exists() or not test_path.exists():
             raise FileNotFoundError(f"Engineered data for plan '{plan}' not found")
-        
+    
         train_df = pd.read_parquet(train_path)
         test_df = pd.read_parquet(test_path)
-        
+    
         # --- FIX: Drop all non-numeric columns ---
         string_cols_train = train_df.select_dtypes(include=['object', 'string']).columns.tolist()
         string_cols_test = test_df.select_dtypes(include=['object', 'string']).columns.tolist()
-        
+    
         datetime_cols_train = train_df.select_dtypes(include=['datetime64']).columns.tolist()
         datetime_cols_test = test_df.select_dtypes(include=['datetime64']).columns.tolist()
-        
+    
         all_non_numeric_train = string_cols_train + datetime_cols_train
         all_non_numeric_test = string_cols_test + datetime_cols_test
-        
+    
         if all_non_numeric_train:
             logger.warning(f"Dropping non-numeric columns from train: {all_non_numeric_train}")
             train_df = train_df.drop(columns=all_non_numeric_train)
-        
+    
         if all_non_numeric_test:
             logger.warning(f"Dropping non-numeric columns from test: {all_non_numeric_test}")
             test_df = test_df.drop(columns=all_non_numeric_test)
         # --- END FIX ---
-        
-        # --- FORCE FIX: Impute ALL remaining columns ---
+    
+        # --- FIXED IMPUTATION: Handle train data ---
         for col in train_df.columns:
             if train_df[col].isnull().any():
                 if train_df[col].dtype in ['float64', 'float32', 'int64', 'int32']:
                     median_val = train_df[col].median()
                     train_df[col] = train_df[col].fillna(median_val)
+                    impute_val = median_val
                 else:
                     mode_val = train_df[col].mode()[0] if len(train_df[col].mode()) > 0 else 0
                     train_df[col] = train_df[col].fillna(mode_val)
-                logger.debug(f"Imputed {col} with {median_val if 'median' in locals() else mode_val}")
-        
+                    impute_val = mode_val
+                logger.debug(f"Imputed train column {col} with {impute_val}")
+    
+        # --- FIXED IMPUTATION: Handle test data ---
         for col in test_df.columns:
             if test_df[col].isnull().any():
                 if col in train_df.columns:
+                    # Use train statistics for consistency
                     if train_df[col].dtype in ['float64', 'float32', 'int64', 'int32']:
                         median_val = train_df[col].median()
                         test_df[col] = test_df[col].fillna(median_val)
+                        impute_val = median_val
                     else:
                         mode_val = train_df[col].mode()[0] if len(train_df[col].mode()) > 0 else 0
                         test_df[col] = test_df[col].fillna(mode_val)
+                        impute_val = mode_val
                 else:
+                    # Fallback to test column statistics if column not in train
                     if test_df[col].dtype in ['float64', 'float32', 'int64', 'int32']:
                         median_val = test_df[col].median()
                         test_df[col] = test_df[col].fillna(median_val)
+                        impute_val = median_val
                     else:
                         mode_val = test_df[col].mode()[0] if len(test_df[col].mode()) > 0 else 0
                         test_df[col] = test_df[col].fillna(mode_val)
-        # --- END FIX ---
-        
+                        impute_val = mode_val
+                logger.debug(f"Imputed test column {col} with {impute_val}")
+        # --- END FIXED IMPUTATION ---
+    
         # Identify feature columns (exclude target and profit)
         exclude_cols = ['default', 'profit', 'loan_status', 'id']
         feature_cols = [c for c in train_df.columns if c not in exclude_cols]
-        
+    
         X_train = train_df[feature_cols]
         y_train = train_df['default']
         X_test = test_df[feature_cols]
         y_test = test_df['default']
-        
+    
         # Store profit values for later use
         self.train_profit = train_df['profit']
         self.test_profit = test_df['profit']
-        
+    
         logger.info(f"Loaded {plan}: Train {X_train.shape}, Test {X_test.shape}")
         logger.info(f"Missing values in train: {X_train.isnull().sum().sum()}")
         logger.info(f"Missing values in test: {X_test.isnull().sum().sum()}")
-        
+    
         return X_train, X_test, y_train, y_test
     
 

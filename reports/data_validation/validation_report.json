@@ -1,0 +1,1345 @@
+{
+  "timestamp": "2026-06-15T23:20:42.390456",
+  "file_path": "data\\raw\\accepted_loans.parquet",
+  "file_integrity": true,
+  "feature_presence": [
+    [],
+    [
+      "issue_d",
+      "earliest_cr_line"
+    ]
+  ],
+  "numeric_stats": {
+    "loan_amnt": {
+      "mean": 15046.9296875,
+      "median": 12900.0,
+      "std": 9190.2451171875,
+      "min": 500.0,
+      "max": 40000.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "funded_amnt": {
+      "mean": 15041.6650390625,
+      "median": 12875.0,
+      "std": 9188.4130859375,
+      "min": 500.0,
+      "max": 40000.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "funded_amnt_inv": {
+      "mean": 15023.437745306326,
+      "median": 12800.0,
+      "std": 9192.331678793576,
+      "min": 0.0,
+      "max": 40000.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.01,
+      "outliers_pct": 0.0
+    },
+    "int_rate": {
+      "mean": 13.092829115111119,
+      "median": 12.62,
+      "std": 4.832138364571109,
+      "min": 5.31,
+      "max": 30.99,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "installment": {
+      "mean": 445.8068228815553,
+      "median": 377.99,
+      "std": 267.17353460842605,
+      "min": 4.93,
+      "max": 1719.83,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "annual_inc": {
+      "mean": 77992.42868706713,
+      "median": 65000.0,
+      "std": 112696.19957435431,
+      "min": 0.0,
+      "max": 110000000.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.07,
+      "outliers_pct": 1.62
+    },
+    "dti": {
+      "mean": 18.8241964366741,
+      "median": 17.84,
+      "std": 14.18332854307813,
+      "min": -1.0,
+      "max": 999.0,
+      "missing_pct": 0.08,
+      "zeros_pct": 0.08,
+      "outliers_pct": 0.33
+    },
+    "delinq_2yrs": {
+      "mean": 0.3068791627883911,
+      "median": 0.0,
+      "std": 0.8672303557395935,
+      "min": 0.0,
+      "max": 58.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 81.35,
+      "outliers_pct": 18.65
+    },
+    "fico_range_low": {
+      "mean": 698.58837890625,
+      "median": 690.0,
+      "std": 33.0103759765625,
+      "min": 610.0,
+      "max": 845.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.04
+    },
+    "fico_range_high": {
+      "mean": 702.588623046875,
+      "median": 694.0,
+      "std": 33.01124572753906,
+      "min": 614.0,
+      "max": 850.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.04
+    },
+    "inq_last_6mths": {
+      "mean": 0.5768353939056396,
+      "median": 0.0,
+      "std": 0.8859631419181824,
+      "min": 0.0,
+      "max": 33.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 61.12,
+      "outliers_pct": 0.35
+    },
+    "mths_since_last_delinq": {
+      "mean": 34.54090118408203,
+      "median": 31.0,
+      "std": 21.900470733642578,
+      "min": 0.0,
+      "max": 226.0,
+      "missing_pct": 51.25,
+      "zeros_pct": 0.12,
+      "outliers_pct": 0.0
+    },
+    "mths_since_last_record": {
+      "mean": 72.3128433227539,
+      "median": 74.0,
+      "std": 26.464094161987305,
+      "min": 0.0,
+      "max": 129.0,
+      "missing_pct": 84.11,
+      "zeros_pct": 0.06,
+      "outliers_pct": 0.0
+    },
+    "open_acc": {
+      "mean": 11.612396240234375,
+      "median": 11.0,
+      "std": 5.640861511230469,
+      "min": 0.0,
+      "max": 101.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.55
+    },
+    "pub_rec": {
+      "mean": 0.19752778112888336,
+      "median": 0.0,
+      "std": 0.5705150365829468,
+      "min": 0.0,
+      "max": 86.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 84.17,
+      "outliers_pct": 15.83
+    },
+    "revol_bal": {
+      "mean": 16658.458077877865,
+      "median": 11324.0,
+      "std": 22948.30502779043,
+      "min": 0.0,
+      "max": 2904836.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.56,
+      "outliers_pct": 2.38
+    },
+    "revol_util": {
+      "mean": 50.33769624670081,
+      "median": 50.3,
+      "std": 24.713073320891368,
+      "min": 0.0,
+      "max": 892.3,
+      "missing_pct": 0.08,
+      "zeros_pct": 0.58,
+      "outliers_pct": 0.0
+    },
+    "total_acc": {
+      "mean": 24.162551879882812,
+      "median": 22.0,
+      "std": 11.987528800964355,
+      "min": 1.0,
+      "max": 176.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.11
+    },
+    "out_prncp": {
+      "mean": 4206.891439362171,
+      "median": 0.0,
+      "std": 7343.238522071131,
+      "min": 0.0,
+      "max": 40000.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 59.84,
+      "outliers_pct": 3.2
+    },
+    "out_prncp_inv": {
+      "mean": 4205.965356509666,
+      "median": 0.0,
+      "std": 7342.332972467982,
+      "min": 0.0,
+      "max": 40000.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 59.84,
+      "outliers_pct": 3.2
+    },
+    "total_pymnt": {
+      "mean": 12082.556829495932,
+      "median": 9329.72,
+      "std": 9901.383185070772,
+      "min": 0.0,
+      "max": 63296.877916990896,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.04,
+      "outliers_pct": 0.06
+    },
+    "total_pymnt_inv": {
+      "mean": 12064.394654562278,
+      "median": 9309.675,
+      "std": 9896.991745106718,
+      "min": 0.0,
+      "max": 63296.88,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.05,
+      "outliers_pct": 0.06
+    },
+    "total_rec_prncp": {
+      "mean": 9505.771587681162,
+      "median": 7000.0,
+      "std": 8321.852079137623,
+      "min": 0.0,
+      "max": 40000.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.11,
+      "outliers_pct": 0.0
+    },
+    "total_rec_int": {
+      "mean": 2431.38765447204,
+      "median": 1525.94,
+      "std": 2679.737839675103,
+      "min": 0.0,
+      "max": 28192.5,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.12,
+      "outliers_pct": 2.34
+    },
+    "total_rec_late_fee": {
+      "mean": 1.5184530378664223,
+      "median": 0.0,
+      "std": 11.841591673756671,
+      "min": -9.5e-09,
+      "max": 1484.34,
+      "missing_pct": 0.0,
+      "zeros_pct": 96.14,
+      "outliers_pct": 3.86
+    },
+    "recoveries": {
+      "mean": 143.879135221489,
+      "median": 0.0,
+      "std": 748.1640051136734,
+      "min": 0.0,
+      "max": 39859.55,
+      "missing_pct": 0.0,
+      "zeros_pct": 91.8,
+      "outliers_pct": 8.2
+    },
+    "collection_recovery_fee": {
+      "mean": 23.98256585933105,
+      "median": 0.0,
+      "std": 131.225586967112,
+      "min": 0.0,
+      "max": 7174.719,
+      "missing_pct": 0.0,
+      "zeros_pct": 92.17,
+      "outliers_pct": 7.83
+    },
+    "last_pymnt_amnt": {
+      "mean": 3429.3459419105693,
+      "median": 600.57,
+      "std": 6018.24758176744,
+      "min": 0.0,
+      "max": 42192.05,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.13,
+      "outliers_pct": 7.32
+    },
+    "last_fico_range_high": {
+      "mean": 687.6610717773438,
+      "median": 699.0,
+      "std": 72.9704360961914,
+      "min": 0.0,
+      "max": 850.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.01,
+      "outliers_pct": 0.01
+    },
+    "last_fico_range_low": {
+      "mean": 675.53955078125,
+      "median": 695.0,
+      "std": 111.09762573242188,
+      "min": 0.0,
+      "max": 845.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 1.65,
+      "outliers_pct": 1.65
+    },
+    "collections_12_mths_ex_med": {
+      "mean": 0.01814580149948597,
+      "median": 0.0,
+      "std": 0.15081314742565155,
+      "min": 0.0,
+      "max": 20.0,
+      "missing_pct": 0.01,
+      "zeros_pct": 98.34,
+      "outliers_pct": 1.66
+    },
+    "mths_since_last_major_derog": {
+      "mean": 44.16423416137695,
+      "median": 44.0,
+      "std": 21.53312110900879,
+      "min": 0.0,
+      "max": 226.0,
+      "missing_pct": 74.31,
+      "zeros_pct": 0.02,
+      "outliers_pct": 0.0
+    },
+    "policy_code": {
+      "mean": 1.0,
+      "median": 1.0,
+      "std": 0.0,
+      "min": 1.0,
+      "max": 1.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "annual_inc_joint": {
+      "mean": 123624.63670052188,
+      "median": 110000.0,
+      "std": 74161.3463277753,
+      "min": 5693.51,
+      "max": 7874821.0,
+      "missing_pct": 94.66,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.06
+    },
+    "dti_joint": {
+      "mean": 19.251817059632494,
+      "median": 18.84,
+      "std": 7.822085979598825,
+      "min": 0.0,
+      "max": 69.49,
+      "missing_pct": 94.66,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "acc_now_delinq": {
+      "mean": 0.004147942177951336,
+      "median": 0.0,
+      "std": 0.06961656361818314,
+      "min": 0.0,
+      "max": 14.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 99.61,
+      "outliers_pct": 0.39
+    },
+    "tot_coll_amt": {
+      "mean": 232.7317657470703,
+      "median": 0.0,
+      "std": 8518.4619140625,
+      "min": 0.0,
+      "max": 9152545.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 82.1,
+      "outliers_pct": 14.79
+    },
+    "tot_cur_bal": {
+      "mean": 142492.140625,
+      "median": 79240.0,
+      "std": 160692.640625,
+      "min": 0.0,
+      "max": 9971659.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.04,
+      "outliers_pct": 0.63
+    },
+    "open_acc_6m": {
+      "mean": 0.9344198703765869,
+      "median": 1.0,
+      "std": 1.1406999826431274,
+      "min": 0.0,
+      "max": 18.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 27.78,
+      "outliers_pct": 0.76
+    },
+    "open_act_il": {
+      "mean": 2.779406785964966,
+      "median": 2.0,
+      "std": 3.000784397125244,
+      "min": 0.0,
+      "max": 57.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 7.34,
+      "outliers_pct": 2.49
+    },
+    "open_il_12m": {
+      "mean": 0.67643141746521,
+      "median": 0.0,
+      "std": 0.9256353974342346,
+      "min": 0.0,
+      "max": 25.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 33.63,
+      "outliers_pct": 0.28
+    },
+    "open_il_24m": {
+      "mean": 1.5627515316009521,
+      "median": 1.0,
+      "std": 1.5786720514297485,
+      "min": 0.0,
+      "max": 51.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 16.7,
+      "outliers_pct": 0.22
+    },
+    "mths_since_rcnt_il": {
+      "mean": 21.222362518310547,
+      "median": 13.0,
+      "std": 26.04918670654297,
+      "min": 0.0,
+      "max": 511.0,
+      "missing_pct": 40.25,
+      "zeros_pct": 0.03,
+      "outliers_pct": 2.8
+    },
+    "total_bal_il": {
+      "mean": 35506.64453125,
+      "median": 23127.0,
+      "std": 44097.45703125,
+      "min": 0.0,
+      "max": 1837038.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 7.02,
+      "outliers_pct": 1.38
+    },
+    "il_util": {
+      "mean": 69.1409912109375,
+      "median": 72.0,
+      "std": 23.74838638305664,
+      "min": 0.0,
+      "max": 1000.0,
+      "missing_pct": 47.28,
+      "zeros_pct": 0.29,
+      "outliers_pct": 0.01
+    },
+    "open_rv_12m": {
+      "mean": 1.2901331186294556,
+      "median": 1.0,
+      "std": 1.506826639175415,
+      "min": 0.0,
+      "max": 28.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 22.72,
+      "outliers_pct": 0.19
+    },
+    "open_rv_24m": {
+      "mean": 2.74992299079895,
+      "median": 2.0,
+      "std": 2.5969107151031494,
+      "min": 0.0,
+      "max": 60.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 9.9,
+      "outliers_pct": 0.32
+    },
+    "max_bal_bc": {
+      "mean": 5806.392578125,
+      "median": 4413.0,
+      "std": 5690.56103515625,
+      "min": 0.0,
+      "max": 1170668.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 1.59,
+      "outliers_pct": 0.85
+    },
+    "all_util": {
+      "mean": 57.03231430053711,
+      "median": 58.0,
+      "std": 20.904747009277344,
+      "min": 0.0,
+      "max": 239.0,
+      "missing_pct": 38.32,
+      "zeros_pct": 0.13,
+      "outliers_pct": 0.0
+    },
+    "total_rev_hi_lim": {
+      "mean": 34573.953125,
+      "median": 25400.0,
+      "std": 36728.49609375,
+      "min": 0.0,
+      "max": 9999999.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.06,
+      "outliers_pct": 1.9
+    },
+    "inq_fi": {
+      "mean": 1.0128666162490845,
+      "median": 1.0,
+      "std": 1.4894556999206543,
+      "min": 0.0,
+      "max": 48.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 30.84,
+      "outliers_pct": 2.07
+    },
+    "total_cu_tl": {
+      "mean": 1.4773043394088745,
+      "median": 0.0,
+      "std": 2.6729912757873535,
+      "min": 0.0,
+      "max": 111.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 33.31,
+      "outliers_pct": 1.79
+    },
+    "inq_last_12m": {
+      "mean": 2.0366673469543457,
+      "median": 1.0,
+      "std": 2.383117198944092,
+      "min": 0.0,
+      "max": 67.0,
+      "missing_pct": 38.31,
+      "zeros_pct": 17.7,
+      "outliers_pct": 0.33
+    },
+    "acc_open_past_24mths": {
+      "mean": 4.521655559539795,
+      "median": 4.0,
+      "std": 3.164229393005371,
+      "min": 0.0,
+      "max": 64.0,
+      "missing_pct": 2.21,
+      "zeros_pct": 4.44,
+      "outliers_pct": 0.26
+    },
+    "avg_cur_bal": {
+      "mean": 13547.7978515625,
+      "median": 7335.0,
+      "std": 16474.076171875,
+      "min": 0.0,
+      "max": 958084.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.04,
+      "outliers_pct": 1.44
+    },
+    "bc_open_to_buy": {
+      "mean": 11394.259765625,
+      "median": 5442.0,
+      "std": 16599.53515625,
+      "min": 0.0,
+      "max": 711140.0,
+      "missing_pct": 3.32,
+      "zeros_pct": 1.36,
+      "outliers_pct": 3.19
+    },
+    "bc_util": {
+      "mean": 57.89994754181207,
+      "median": 60.2,
+      "std": 28.583474537910323,
+      "min": 0.0,
+      "max": 339.6,
+      "missing_pct": 3.37,
+      "zeros_pct": 1.23,
+      "outliers_pct": 0.0
+    },
+    "chargeoff_within_12_mths": {
+      "mean": 0.00846441276371479,
+      "median": 0.0,
+      "std": 0.10480979084968567,
+      "min": 0.0,
+      "max": 10.0,
+      "missing_pct": 0.01,
+      "zeros_pct": 99.23,
+      "outliers_pct": 0.76
+    },
+    "delinq_amnt": {
+      "mean": 12.369828224182129,
+      "median": 0.0,
+      "std": 726.4647827148438,
+      "min": 0.0,
+      "max": 249925.0,
+      "missing_pct": 0.0,
+      "zeros_pct": 99.68,
+      "outliers_pct": 0.32
+    },
+    "mo_sin_old_il_acct": {
+      "mean": 125.73773193359375,
+      "median": 130.0,
+      "std": 53.38217544555664,
+      "min": 0.0,
+      "max": 999.0,
+      "missing_pct": 6.15,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.26
+    },
+    "mo_sin_old_rev_tl_op": {
+      "mean": 181.49160766601562,
+      "median": 164.0,
+      "std": 97.11845397949219,
+      "min": 1.0,
+      "max": 999.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.16
+    },
+    "mo_sin_rcnt_rev_tl_op": {
+      "mean": 14.024091720581055,
+      "median": 8.0,
+      "std": 17.533082962036133,
+      "min": 0.0,
+      "max": 547.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 1.49,
+      "outliers_pct": 3.15
+    },
+    "mo_sin_rcnt_tl": {
+      "mean": 8.297468185424805,
+      "median": 6.0,
+      "std": 9.208556175231934,
+      "min": 0.0,
+      "max": 382.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 1.54,
+      "outliers_pct": 1.69
+    },
+    "mort_acc": {
+      "mean": 1.555382251739502,
+      "median": 1.0,
+      "std": 1.904981017112732,
+      "min": 0.0,
+      "max": 94.0,
+      "missing_pct": 2.21,
+      "zeros_pct": 41.12,
+      "outliers_pct": 0.06
+    },
+    "mths_since_recent_bc": {
+      "mean": 24.844846725463867,
+      "median": 14.0,
+      "std": 32.31925582885742,
+      "min": 0.0,
+      "max": 661.0,
+      "missing_pct": 3.25,
+      "zeros_pct": 0.59,
+      "outliers_pct": 3.55
+    },
+    "mths_since_recent_bc_dlq": {
+      "mean": 39.303096771240234,
+      "median": 37.0,
+      "std": 22.61768913269043,
+      "min": 0.0,
+      "max": 202.0,
+      "missing_pct": 77.01,
+      "zeros_pct": 0.04,
+      "outliers_pct": 0.0
+    },
+    "mths_since_recent_inq": {
+      "mean": 7.024194240570068,
+      "median": 5.0,
+      "std": 5.965411186218262,
+      "min": 0.0,
+      "max": 25.0,
+      "missing_pct": 13.07,
+      "zeros_pct": 7.47,
+      "outliers_pct": 0.0
+    },
+    "mths_since_recent_revol_delinq": {
+      "mean": 35.782230377197266,
+      "median": 33.0,
+      "std": 22.307239532470703,
+      "min": 0.0,
+      "max": 202.0,
+      "missing_pct": 67.25,
+      "zeros_pct": 0.06,
+      "outliers_pct": 0.0
+    },
+    "num_accts_ever_120_pd": {
+      "mean": 0.5002081990242004,
+      "median": 0.0,
+      "std": 1.3503257036209106,
+      "min": 0.0,
+      "max": 58.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 74.64,
+      "outliers_pct": 22.25
+    },
+    "num_actv_bc_tl": {
+      "mean": 3.6760690212249756,
+      "median": 3.0,
+      "std": 2.324646472930908,
+      "min": 0.0,
+      "max": 50.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 2.21,
+      "outliers_pct": 0.23
+    },
+    "num_actv_rev_tl": {
+      "mean": 5.629467487335205,
+      "median": 5.0,
+      "std": 3.382873773574829,
+      "min": 0.0,
+      "max": 72.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.51,
+      "outliers_pct": 0.44
+    },
+    "num_bc_sats": {
+      "mean": 4.77418327331543,
+      "median": 4.0,
+      "std": 3.03792142868042,
+      "min": 0.0,
+      "max": 71.0,
+      "missing_pct": 2.59,
+      "zeros_pct": 1.05,
+      "outliers_pct": 0.83
+    },
+    "num_bc_tl": {
+      "mean": 7.726402282714844,
+      "median": 7.0,
+      "std": 4.701430320739746,
+      "min": 0.0,
+      "max": 86.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.25,
+      "outliers_pct": 0.26
+    },
+    "num_il_tl": {
+      "mean": 8.413439750671387,
+      "median": 6.0,
+      "std": 7.359113693237305,
+      "min": 0.0,
+      "max": 159.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 3.05,
+      "outliers_pct": 0.9
+    },
+    "num_op_rev_tl": {
+      "mean": 8.2465238571167,
+      "median": 7.0,
+      "std": 4.6839280128479,
+      "min": 0.0,
+      "max": 91.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.05,
+      "outliers_pct": 0.63
+    },
+    "num_rev_accts": {
+      "mean": 14.004632949829102,
+      "median": 12.0,
+      "std": 8.038866996765137,
+      "min": 0.0,
+      "max": 151.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.27
+    },
+    "num_rev_tl_bal_gt_0": {
+      "mean": 5.577950954437256,
+      "median": 5.0,
+      "std": 3.293433904647827,
+      "min": 0.0,
+      "max": 65.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.5,
+      "outliers_pct": 0.35
+    },
+    "num_sats": {
+      "mean": 11.628131866455078,
+      "median": 11.0,
+      "std": 5.644026756286621,
+      "min": 0.0,
+      "max": 101.0,
+      "missing_pct": 2.59,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.54
+    },
+    "num_tl_120dpd_2m": {
+      "mean": 0.0006373958312906325,
+      "median": 0.0,
+      "std": 0.027106434106826782,
+      "min": 0.0,
+      "max": 7.0,
+      "missing_pct": 6.8,
+      "zeros_pct": 93.15,
+      "outliers_pct": 0.06
+    },
+    "num_tl_30dpd": {
+      "mean": 0.002813651692122221,
+      "median": 0.0,
+      "std": 0.05616522580385208,
+      "min": 0.0,
+      "max": 4.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 96.63,
+      "outliers_pct": 0.26
+    },
+    "num_tl_90g_dpd_24m": {
+      "mean": 0.08293766528367996,
+      "median": 0.0,
+      "std": 0.49357321858406067,
+      "min": 0.0,
+      "max": 58.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 91.7,
+      "outliers_pct": 5.19
+    },
+    "num_tl_op_past_12m": {
+      "mean": 2.0767552852630615,
+      "median": 2.0,
+      "std": 1.830710768699646,
+      "min": 0.0,
+      "max": 32.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 18.4,
+      "outliers_pct": 0.41
+    },
+    "pct_tl_nvr_dlq": {
+      "mean": 94.11457645907724,
+      "median": 100.0,
+      "std": 9.036140361127272,
+      "min": 0.0,
+      "max": 100.0,
+      "missing_pct": 3.12,
+      "zeros_pct": 0.0,
+      "outliers_pct": 1.66
+    },
+    "percent_bc_gt_75": {
+      "mean": 42.43512653932729,
+      "median": 37.5,
+      "std": 36.2161573256478,
+      "min": 0.0,
+      "max": 100.0,
+      "missing_pct": 3.34,
+      "zeros_pct": 26.48,
+      "outliers_pct": 0.0
+    },
+    "pub_rec_bankruptcies": {
+      "mean": 0.12819351255893707,
+      "median": 0.0,
+      "std": 0.36461299657821655,
+      "min": 0.0,
+      "max": 12.0,
+      "missing_pct": 0.06,
+      "zeros_pct": 87.91,
+      "outliers_pct": 12.03
+    },
+    "tax_liens": {
+      "mean": 0.046771090477705,
+      "median": 0.0,
+      "std": 0.37753382325172424,
+      "min": 0.0,
+      "max": 85.0,
+      "missing_pct": 0.01,
+      "zeros_pct": 97.14,
+      "outliers_pct": 2.86
+    },
+    "tot_hi_cred_lim": {
+      "mean": 178242.703125,
+      "median": 114298.5,
+      "std": 181574.8125,
+      "min": 0.0,
+      "max": 9999999.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.63
+    },
+    "total_bal_ex_mort": {
+      "mean": 51022.94140625,
+      "median": 37864.0,
+      "std": 49911.234375,
+      "min": 0.0,
+      "max": 3408095.0,
+      "missing_pct": 2.21,
+      "zeros_pct": 0.07,
+      "outliers_pct": 1.97
+    },
+    "total_bc_limit": {
+      "mean": 23193.77734375,
+      "median": 16300.0,
+      "std": 23006.55859375,
+      "min": 0.0,
+      "max": 1569000.0,
+      "missing_pct": 2.21,
+      "zeros_pct": 1.12,
+      "outliers_pct": 1.6
+    },
+    "total_il_high_credit_limit": {
+      "mean": 43732.015625,
+      "median": 32696.0,
+      "std": 45072.98046875,
+      "min": 0.0,
+      "max": 2118996.0,
+      "missing_pct": 3.11,
+      "zeros_pct": 11.66,
+      "outliers_pct": 1.41
+    },
+    "revol_bal_joint": {
+      "mean": 33617.28515625,
+      "median": 26516.5,
+      "std": 28153.875,
+      "min": 0.0,
+      "max": 1110019.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.06
+    },
+    "sec_app_fico_range_low": {
+      "mean": 669.7556762695312,
+      "median": 670.0,
+      "std": 44.729164123535156,
+      "min": 540.0,
+      "max": 845.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "sec_app_fico_range_high": {
+      "mean": 673.7556762695312,
+      "median": 674.0,
+      "std": 44.729270935058594,
+      "min": 544.0,
+      "max": 850.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "sec_app_inq_last_6mths": {
+      "mean": 0.6332564949989319,
+      "median": 0.0,
+      "std": 0.9934011697769165,
+      "min": 0.0,
+      "max": 6.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 2.89,
+      "outliers_pct": 0.04
+    },
+    "sec_app_mort_acc": {
+      "mean": 1.5389970541000366,
+      "median": 1.0,
+      "std": 1.7605684995651245,
+      "min": 0.0,
+      "max": 27.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 1.87,
+      "outliers_pct": 0.01
+    },
+    "sec_app_open_acc": {
+      "mean": 11.469454765319824,
+      "median": 10.0,
+      "std": 6.6272711753845215,
+      "min": 0.0,
+      "max": 82.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.01
+    },
+    "sec_app_revol_util": {
+      "mean": 58.16910080614782,
+      "median": 60.2,
+      "std": 25.548211613627483,
+      "min": 0.0,
+      "max": 434.3,
+      "missing_pct": 95.3,
+      "zeros_pct": 0.05,
+      "outliers_pct": 0.0
+    },
+    "sec_app_open_act_il": {
+      "mean": 3.0105535984039307,
+      "median": 2.0,
+      "std": 3.275893211364746,
+      "min": 0.0,
+      "max": 43.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 0.64,
+      "outliers_pct": 0.1
+    },
+    "sec_app_num_rev_accts": {
+      "mean": 12.533072471618652,
+      "median": 11.0,
+      "std": 8.150962829589844,
+      "min": 0.0,
+      "max": 106.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 0.03,
+      "outliers_pct": 0.01
+    },
+    "sec_app_chargeoff_within_12_mths": {
+      "mean": 0.04635209962725639,
+      "median": 0.0,
+      "std": 0.41149601340293884,
+      "min": 0.0,
+      "max": 21.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 4.65,
+      "outliers_pct": 0.13
+    },
+    "sec_app_collections_12_mths_ex_med": {
+      "mean": 0.07756824791431427,
+      "median": 0.0,
+      "std": 0.40799564123153687,
+      "min": 0.0,
+      "max": 23.0,
+      "missing_pct": 95.22,
+      "zeros_pct": 4.5,
+      "outliers_pct": 0.28
+    },
+    "sec_app_mths_since_last_major_derog": {
+      "mean": 36.93792724609375,
+      "median": 36.0,
+      "std": 23.924583435058594,
+      "min": 0.0,
+      "max": 185.0,
+      "missing_pct": 98.41,
+      "zeros_pct": 0.02,
+      "outliers_pct": 0.0
+    },
+    "deferral_term": {
+      "mean": 3.0,
+      "median": 3.0,
+      "std": 0.0,
+      "min": 3.0,
+      "max": 3.0,
+      "missing_pct": 99.52,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "hardship_amount": {
+      "mean": 155.0459805807456,
+      "median": 119.14,
+      "std": 129.04059407028788,
+      "min": 0.64,
+      "max": 943.94,
+      "missing_pct": 99.52,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "hardship_length": {
+      "mean": 3.0,
+      "median": 3.0,
+      "std": 0.0,
+      "min": 3.0,
+      "max": 3.0,
+      "missing_pct": 99.52,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "hardship_dpd": {
+      "mean": 13.74388599395752,
+      "median": 15.0,
+      "std": 9.671178817749023,
+      "min": 0.0,
+      "max": 37.0,
+      "missing_pct": 99.52,
+      "zeros_pct": 0.11,
+      "outliers_pct": 0.0
+    },
+    "orig_projected_additional_accrued_interest": {
+      "mean": 454.7980892382383,
+      "median": 352.77,
+      "std": 375.3855000687775,
+      "min": 1.92,
+      "max": 2680.89,
+      "missing_pct": 99.62,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "hardship_payoff_balance_amount": {
+      "mean": 11636.883941559036,
+      "median": 10028.39,
+      "std": 7625.988281152928,
+      "min": 55.73,
+      "max": 40306.41,
+      "missing_pct": 99.52,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "hardship_last_payment_amount": {
+      "mean": 193.99432078409825,
+      "median": 133.16,
+      "std": 198.62949581836793,
+      "min": 0.01,
+      "max": 1407.86,
+      "missing_pct": 99.52,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "settlement_amount": {
+      "mean": 5010.664267067687,
+      "median": 4146.110000000001,
+      "std": 3693.122590075488,
+      "min": 44.21,
+      "max": 33601.0,
+      "missing_pct": 98.49,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.0
+    },
+    "settlement_percentage": {
+      "mean": 47.78036500613205,
+      "median": 45.0,
+      "std": 7.3118217062083275,
+      "min": 0.2,
+      "max": 521.35,
+      "missing_pct": 98.49,
+      "zeros_pct": 0.0,
+      "outliers_pct": 0.03
+    },
+    "settlement_term": {
+      "mean": 13.19132137298584,
+      "median": 14.0,
+      "std": 8.159979820251465,
+      "min": 0.0,
+      "max": 181.0,
+      "missing_pct": 98.49,
+      "zeros_pct": 0.12,
+      "outliers_pct": 0.0
+    }
+  },
+  "categorical_stats": {
+    "term": {
+      "unique_values": 2,
+      "mode": " 36 months",
+      "mode_freq": "1609754",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "grade": {
+      "unique_values": 7,
+      "mode": "B",
+      "mode_freq": "663557",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "sub_grade": {
+      "unique_values": 35,
+      "mode": "C1",
+      "mode_freq": "145903",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "emp_length": {
+      "unique_values": 11,
+      "mode": "10+ years",
+      "mode_freq": "748005",
+      "high_cardinality": false,
+      "missing_pct": 6.5
+    },
+    "home_ownership": {
+      "unique_values": 6,
+      "mode": "MORTGAGE",
+      "mode_freq": "1111450",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "verification_status": {
+      "unique_values": 3,
+      "mode": "Source Verified",
+      "mode_freq": "886231",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "loan_status": {
+      "unique_values": 9,
+      "mode": "Fully Paid",
+      "mode_freq": "1076751",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "pymnt_plan": {
+      "unique_values": 2,
+      "mode": "n",
+      "mode_freq": "2260048",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "purpose": {
+      "unique_values": 14,
+      "mode": "debt_consolidation",
+      "mode_freq": "1277877",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "addr_state": {
+      "unique_values": 51,
+      "mode": "CA",
+      "mode_freq": "314533",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "initial_list_status": {
+      "unique_values": 2,
+      "mode": "w",
+      "mode_freq": "1535467",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "application_type": {
+      "unique_values": 2,
+      "mode": "Individual",
+      "mode_freq": "2139958",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "verification_status_joint": {
+      "unique_values": 3,
+      "mode": "Not Verified",
+      "mode_freq": "57403",
+      "high_cardinality": false,
+      "missing_pct": 94.88
+    },
+    "hardship_type": {
+      "unique_values": 1,
+      "mode": "INTEREST ONLY-3 MONTHS DEFERRAL",
+      "mode_freq": "10917",
+      "high_cardinality": false,
+      "missing_pct": 99.52
+    },
+    "hardship_reason": {
+      "unique_values": 9,
+      "mode": "NATURAL_DISASTER",
+      "mode_freq": "2965",
+      "high_cardinality": false,
+      "missing_pct": 99.52
+    },
+    "hardship_status": {
+      "unique_values": 3,
+      "mode": "COMPLETED",
+      "mode_freq": "7819",
+      "high_cardinality": false,
+      "missing_pct": 99.52
+    },
+    "hardship_loan_status": {
+      "unique_values": 5,
+      "mode": "Late (16-30 days)",
+      "mode_freq": "4770",
+      "high_cardinality": false,
+      "missing_pct": 99.52
+    },
+    "disbursement_method": {
+      "unique_values": 2,
+      "mode": "Cash",
+      "mode_freq": "2182546",
+      "high_cardinality": false,
+      "missing_pct": 0.0
+    },
+    "settlement_status": {
+      "unique_values": 3,
+      "mode": "ACTIVE",
+      "mode_freq": "14704",
+      "high_cardinality": false,
+      "missing_pct": 98.49
+    }
+  },
+  "date_stats": {
+    "issue_d": {
+      "invalid_pct": 0.0,
+      "min": "2007-06-01",
+      "max": "2018-12-01",
+      "range_days": 4201
+    },
+    "earliest_cr_line": {
+      "invalid_pct": 0.0,
+      "min": "1933-03-01",
+      "max": "2015-11-01",
+      "range_days": 30195
+    },
+    "last_pymnt_d": {
+      "invalid_pct": 0.11,
+      "min": "2007-12-01",
+      "max": "2019-03-01",
+      "range_days": 4108
+    },
+    "next_pymnt_d": {
+      "invalid_pct": 59.51,
+      "min": "2008-01-01",
+      "max": "2019-05-01",
+      "range_days": 4138
+    },
+    "last_credit_pull_d": {
+      "invalid_pct": 0.0,
+      "min": "2007-05-01",
+      "max": "2019-04-01",
+      "range_days": 4353
+    },
+    "hardship_start_date": {
+      "invalid_pct": 99.52,
+      "min": "2017-01-01",
+      "max": "2019-03-01",
+      "range_days": 789
+    },
+    "hardship_end_date": {
+      "invalid_pct": 99.52,
+      "min": "2017-03-01",
+      "max": "2019-06-01",
+      "range_days": 822
+    },
+    "payment_plan_start_date": {
+      "invalid_pct": 99.52,
+      "min": "2017-02-01",
+      "max": "2019-04-01",
+      "range_days": 789
+    },
+    "debt_settlement_flag_date": {
+      "invalid_pct": 98.49,
+      "min": "2010-02-01",
+      "max": "2019-03-01",
+      "range_days": 3315
+    },
+    "settlement_date": {
+      "invalid_pct": 98.49,
+      "min": "2009-03-01",
+      "max": "2019-03-01",
+      "range_days": 3652
+    },
+    "sec_app_earliest_cr_line": {
+      "invalid_pct": 95.22,
+      "min": "1934-03-01",
+      "max": "2018-06-01",
+      "range_days": 30773
+    }
+  },
+  "summary": {
+    "total_features": 151,
+    "numeric_features": 112,
+    "categorical_features": 19,
+    "date_features": 11,
+    "missing_features": 0,
+    "extra_features": 2
+  }
+}

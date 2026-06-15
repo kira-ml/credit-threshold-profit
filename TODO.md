@@ -2,52 +2,59 @@
 
 ## Credit Threshold Profit Project
 
-*Last Updated: June 15, 2026, 3:45 AM*
+*Last Updated: June 16, 2026, 1:45 AM*
 
 ---
 
-## ✅ Completed
+## ✅ Completed (as of 1:45 AM)
 
 | Category | Task | Status |
 |----------|------|--------|
 | **Data Pipeline** | CSV to Parquet converter | ✅ Done |
 | **EDA** | Comprehensive EDA report + 6 visualizations | ✅ Done |
-| **Data Cleaning** | Baseline cleaning (1.34M rows, 109 cols) | ✅ Done |
-| **Profit Calculation** | Baseline & Advanced profit methods | ✅ Done |
+| **Data Cleaning** | Baseline cleaning (1.34M rows, 110 cols) | ✅ Done |
+| **Profit Calculation** | Baseline method working, profit = $555M total | ✅ Done |
 | **Preprocessing** | Sparse columns dropped, categories converted, `grade_num` + `emp_length_num` created | ✅ Done |
 | **Data Splitting** | 80/20 train/test split by `issue_d` | ✅ Done |
 | **Feature Engineering** | All 4 plans generated (`baseline_minimal`, `domain_enhanced`, `interaction_heavy`, `ml_informed`) | ✅ Done |
 | **Git History Cleanup** | Removed large Parquet file from Git history | ✅ Done |
 | **Git Remote** | Re-added remote and pushed clean branches | ✅ Done |
+| **Data Validation** | Complete validation report generated | ✅ Done |
+| **Data Quality Fixes** | Outlier capping, moderate missing value imputation added to preprocessing | ✅ Done |
 
 ---
 
-## 🚧 Current State (as of 3:45 AM)
+## 🚧 Current State (as of 1:45 AM)
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| **Model Training Script** | ❌ Failing | Imputation bug (`mode_val` reference error) |
-| **Logistic Regression** | ❌ Not trained | Fails due to missing values |
-| **Random Forest** | ✅ Partially trained | Success on all 4 plans (AUC ~0.999, Brier ~0.002) |
-| **Profit Curves** | ✅ Generated for RF | Optimal threshold consistently 0.94 |
-| **Results DataFrame** | ❌ Empty | No results from LR, so summary fails |
-| **Git History** | ✅ Clean | Parquet file removed, ready for push |
+| **Profit Column** | ✅ Fixed | $555M total profit, present in `cleaned_baseline.parquet` |
+| **Data Pipeline** | ✅ Complete | Cleaning → Profit → Preprocessing → Split → Feature Engineering |
+| **Model Training Script** | ⚠️ Needs re-run | Previous run had zero profit. Now profit is fixed. |
+| **Logistic Regression** | ⚠️ Needs re-run | Will train on all 4 plans with proper profit |
+| **Random Forest** | ⚠️ Needs re-run | Will train on all 4 plans with proper profit |
+| **Profit Curves** | ⚠️ Needs re-run | Currently all zeros due to missing profit |
+| **Results DataFrame** | ⚠️ Needs re-run | Will generate after successful training |
 
 ---
 
-## 🔴 Immediate Fixes (Next Session)
+## 🔴 Priority Tasks (Tomorrow - June 16)
 
 | # | Task | Priority | Location | Est. Time |
 |---|------|----------|----------|-----------|
-| 1 | Fix `mode_val` reference error in imputation | 🔴 Critical | `model_training.py` (load_data) | 5 min |
-| 2 | Re-run model training with fix | 🔴 Critical | CLI | 20-30 min |
-| 3 | Validate Logistic Regression training | 🔴 Critical | `model_training.py` | 10 min |
-| 4 | Generate final results summary | 🔴 Critical | `model_training.py` | 5 min |
+| 1 | **Re-run entire pipeline with fixed profit** | 🔴 Critical | CLI | 10 min |
+|    | └─ `python src/data_preprocessing.py` | | | |
+|    | └─ `python src/data_splitter.py` | | | |
+|    | └─ `python src/feature_engineering.py` | | | |
+| 2 | **Re-run model training** | 🔴 Critical | CLI | 30-60 min |
+|    | └─ `python src/model_training.py` | | | |
+| 3 | **Validate profit curves** (should be non-zero) | 🔴 Critical | `reports/model_comparison/` | 5 min |
+| 4 | **Generate final results summary** | 🔴 Critical | `model_training.py` | 5 min |
 | 5 | **Push `feature/complete-model-training` branch** | 🔴 Critical | CLI | 2 min |
 
 ---
 
-## 🟡 Pending Tasks (After Training Works)
+## 🟡 Secondary Tasks (After Training Works)
 
 | # | Task | Priority | Location | Est. Time |
 |---|------|----------|----------|-----------|
@@ -58,7 +65,7 @@
 
 ---
 
-## 🔵 Final Deliverables (After Training Complete)
+## 🔵 Final Deliverables (After All Training Complete)
 
 | # | Task | Priority | Est. Time |
 |---|------|----------|-----------|
@@ -69,38 +76,38 @@
 
 ---
 
-## 📊 Current Metrics (Partial - RF Only)
+## 📊 Expected Metrics (After Re-run)
 
-| Feature Plan | AUC | Brier | Optimal Threshold | Optimal Profit |
-|--------------|-----|-------|------------------|----------------|
-| baseline_minimal | 0.9998 | 0.0023 | 0.940 | $97,112,912 |
-| domain_enhanced | 0.9999 | 0.0018 | 0.940 | $96,986,059 |
-| interaction_heavy | 0.9999 | 0.0020 | 0.940 | $97,156,086 |
+| Feature Plan | AUC (LR) | AUC (RF) | Optimal Threshold | Optimal Profit |
+|--------------|----------|----------|------------------|----------------|
+| baseline_minimal | *Pending* | *Pending* | *Pending* | *Pending* |
+| domain_enhanced | *Pending* | *Pending* | *Pending* | *Pending* |
+| interaction_heavy | *Pending* | *Pending* | *Pending* | *Pending* |
 | ml_informed | *Pending* | *Pending* | *Pending* | *Pending* |
 
-> **Note:** Logistic Regression results are missing due to imputation bug.
+> **Note:** All values will be populated after re-running `model_training.py` with fixed profit column.
 
 ---
 
-## 🔍 Known Issues
+## 🔍 Known Issues (Resolved)
 
-| Issue | Status | Workaround |
+| Issue | Status | Resolution |
 |-------|--------|------------|
-| `mode_val` referenced before assignment | ❌ Unresolved | Fix in `load_data()` |
-| Missing values (NaN) in features | ❌ Unresolved | Imputation fix should resolve |
-| Logistic Regression failing | ❌ Unresolved | Requires fixed imputation |
-| Results summary failing | ❌ Unresolved | Requires at least one successful training |
-| **Large Parquet file in Git history** | ✅ Resolved | Removed with `git filter-repo` |
+| Profit column all zeros | ✅ Resolved | Fixed in `profit_calculator.py`, verified $555M profit |
+| `mode_val` reference error | ✅ Resolved | Fixed in `model_training.py` `load_data()` |
+| Missing values (NaN) in features | ✅ Resolved | Added `handle_moderate_missing()` to preprocessing |
+| Logistic Regression convergence warnings | ⚠️ Acceptable | Fixed with increased `max_iter=2000` and scaling |
+| Results summary failing | ⚠️ Pending | Will resolve after re-running training |
 
 ---
 
-## 📁 File Structure
+## 📁 File Structure (Updated)
 
 ```
 credit-threshold-profit/
 ├── data/
 │   └── processed/
-│       ├── cleaned_baseline.parquet
+│       ├── cleaned_baseline.parquet (with profit: $555M)
 │       ├── cleaned_preprocessed.parquet
 │       ├── train_features.parquet
 │       ├── test_features.parquet
@@ -112,22 +119,24 @@ credit-threshold-profit/
 │   ├── data_preprocessing.py
 │   ├── data_splitter.py
 │   ├── feature_engineering.py
-│   └── model_training.py
+│   └── model_training.py (fixed)
 ├── reports/
+│   ├── data_validation/
+│   │   └── validation_report.json
 │   └── model_comparison/
-│       ├── model_comparison_metrics.csv (partial)
-│       ├── profit_curve_*.csv (RF only)
-│       └── model_comparison.png (partial)
+│       ├── model_comparison_metrics.csv (pending)
+│       ├── profit_curve_*.csv (pending)
+│       └── model_comparison.png (pending)
 └── TODO.md
 ```
 
 ---
 
-## 🧭 Next Steps (High Level)
+## 🧭 Next Steps (Tomorrow)
 
-1. **Push `feature/complete-model-training` branch** to GitHub
-2. **Fix imputation bug** in `model_training.py`
-3. **Re-run model training** to train all 8 combinations
+1. ✅ **Sleep** (you've earned it!)
+2. **Re-run the full pipeline** (after waking up)
+3. **Re-run model training** with fixed profit column
 4. **Generate final results** and profit curves
 5. **Document findings** in README and executive summary
 6. **Merge to `main`** and push to GitHub for portfolio
@@ -141,3 +150,16 @@ credit-threshold-profit/
 | `feature/complete-model-training` | ✅ Active | Clean, ready for development |
 | `initial-build` | ✅ Archived | All work merged to main |
 | `main` | ✅ Clean | Ready for final merge |
+
+---
+
+## 🎯 Summary for Tomorrow Morning
+
+| Task | Command |
+|------|---------|
+| Re-run preprocessing | `python src/data_preprocessing.py` |
+| Re-run splitter | `python src/data_splitter.py` |
+| Re-run feature engineering | `python src/feature_engineering.py` |
+| Re-run model training | `python src/model_training.py` |
+| Check profit curves | Look for non-zero values in `reports/model_comparison/` |
+| Push results | `git push origin feature/complete-model-training` |

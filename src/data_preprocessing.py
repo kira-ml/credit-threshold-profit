@@ -190,6 +190,91 @@ def remove_zero_funded_loans(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+
+def cap_extreme_outliers(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Cap extreme outliers in specific columns.
+    Should be applied after imputation but before feature engineering.
+    """
+    logger.info("Capping extreme outliers...")
+    
+    # revol_util > 100% - cap at 100%
+    if 'revol_util' in df.columns:
+        outliers = (df['revol_util'] > 100).sum()
+        df['revol_util'] = df['revol_util'].clip(upper=100)
+        logger.info(f"Capped {outliers:,} rows with revol_util > 100% to 100%")
+    
+    # delinq_2yrs > 10 - cap at 10 (reasonable maximum)
+    if 'delinq_2yrs' in df.columns:
+        outliers = (df['delinq_2yrs'] > 10).sum()
+        df['delinq_2yrs'] = df['delinq_2yrs'].clip(upper=10)
+        logger.info(f"Capped {outliers:,} rows with delinq_2yrs > 10 to 10")
+    
+    # pub_rec > 10 - cap at 10
+    if 'pub_rec' in df.columns:
+        outliers = (df['pub_rec'] > 10).sum()
+        df['pub_rec'] = df['pub_rec'].clip(upper=10)
+        logger.info(f"Capped {outliers:,} rows with pub_rec > 10 to 10")
+    
+    # dti < 0 - set to 0
+    if 'dti' in df.columns:
+        negatives = (df['dti'] < 0).sum()
+        df['dti'] = df['dti'].clip(lower=0)
+        logger.info(f"Clipped {negatives:,} rows with dti < 0 to 0")
+    
+    return df
+
+
+def handle_moderate_missing(df: pd.DataFrame, verbose: bool = False) -> pd.DataFrame:
+    """
+    Handle columns with moderate missing values (20-80%).
+    Impute with median for numeric, mode for categorical.
+    
+    Args:
+        df: Input DataFrame
+        verbose: If True, log which columns were imputed
+    
+    Returns:
+        DataFrame with moderate missing values imputed
+    """
+    logger.info("Handling moderate missing values...")
+    
+    missing_pct = df.isnull().mean()
+    
+    # Columns with 20-80% missing
+    moderate_cols = missing_pct[(missing_pct > 0.20) & (missing_pct <= 0.80)].index.tolist()
+    moderate_cols = [c for c in moderate_cols if c != 'profit']
+    
+    if not moderate_cols:
+        logger.info("No columns with 20-80% missing")
+        return df
+    
+    df = df.copy()
+    imputed_count = 0
+    
+    for col in moderate_cols:
+        if df[col].dtype in ['object', 'string']:
+            # Mode imputation for categorical
+            mode_val = df[col].mode()
+            if len(mode_val) > 0:
+                df[col] = df[col].fillna(mode_val[0])
+                imputed_count += 1
+        else:
+            # Median imputation for numeric
+            df[col] = df[col].fillna(df[col].median())
+            imputed_count += 1
+    
+    logger.info(f"Imputed {imputed_count} columns with 20-80% missing")
+    
+    # Log which columns were imputed (only if verbose is True)
+    if verbose:
+        logger.info(f"Imputed columns: {moderate_cols[:10]}...")
+    
+    return df
+
+
+
+
 def save_data(df: pd.DataFrame, output_path: Path) -> None:
     """Save preprocessed data to Parquet"""
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -207,15 +292,6 @@ def preprocess_for_features(
 ) -> pd.DataFrame:
     """
     Complete preprocessing pipeline for feature engineering.
-    
-    Args:
-        input_path: Path to cleaned baseline data
-        output_path: Path to save preprocessed data
-        sparse_threshold: Drop columns with missing % above this threshold
-        missing_threshold: Impute columns with missing % below this threshold
-    
-    Returns:
-        Preprocessed DataFrame
     """
     logger.info("="*60)
     logger.info("STARTING PREPROCESSING FOR FEATURE ENGINEERING")
@@ -227,7 +303,7 @@ def preprocess_for_features(
     
     # Verify profit column exists
     if 'profit' not in df.columns:
-        logger.warning("profit column not found in input data - this may cause issues in feature engineering")
+        logger.warning("profit column not found in input data")
     else:
         logger.info(f"profit column present with {df['profit'].notna().sum():,} non-null values")
     
@@ -238,6 +314,12 @@ def preprocess_for_features(
     df = create_emp_length_numeric(df)
     df = impute_low_missing(df, threshold=missing_threshold)
     df = remove_zero_funded_loans(df)
+    
+    # NEW: Handle moderate missing values (20-80%)
+    df = handle_moderate_missing(df, verbose=False)
+    
+    # NEW: Cap extreme outliers
+    df = cap_extreme_outliers(df)
     
     # Log results
     logger.info("="*60)
