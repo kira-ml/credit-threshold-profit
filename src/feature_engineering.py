@@ -68,7 +68,7 @@ class SafeFeatureEngineer:
         These can be applied directly to both train and test.
         """
         logger.info("Applying base features...")
-        
+    
         # --- FIX: Convert term to numeric ---
         term_map = {
             ' 36 months': 36, '36 months': 36,
@@ -76,15 +76,15 @@ class SafeFeatureEngineer:
         }
         self.train_df['term_numeric'] = self.train_df['term'].map(term_map).fillna(0)
         self.test_df['term_numeric'] = self.test_df['term'].map(term_map).fillna(0)
-        
+    
         # Drop original term column
         self.train_df = self.train_df.drop(columns=['term'], errors='ignore')
         self.test_df = self.test_df.drop(columns=['term'], errors='ignore')
-        
+    
         # Rename term_numeric to term
         self.train_df = self.train_df.rename(columns={'term_numeric': 'term'})
         self.test_df = self.test_df.rename(columns={'term_numeric': 'term'})
-        
+    
         # --- Continue with existing features ---
         # Loan-to-income ratio
         self.train_df = self._add_feature(
@@ -95,17 +95,9 @@ class SafeFeatureEngineer:
             self.test_df, 'loan_to_income',
             self.test_df['funded_amnt'] / (self.test_df['annual_inc'] + 1)
         )
-        
-        # Payment-to-income ratio
-        self.train_df = self._add_feature(
-            self.train_df, 'payment_to_income',
-            self.train_df['installment'] / (self.train_df['annual_inc'] / 12 + 1)
-        )
-        self.test_df = self._add_feature(
-            self.test_df, 'payment_to_income',
-            self.test_df['installment'] / (self.test_df['annual_inc'] / 12 + 1)
-        )
-        
+    
+        # REMOVED: Payment-to-income ratio (uses installment which was removed)
+    
         # Term flag (60 months) - already numeric from the conversion above
         self.train_df = self._add_feature(
             self.train_df, 'term_60',
@@ -115,7 +107,7 @@ class SafeFeatureEngineer:
             self.test_df, 'term_60',
             (self.test_df['term'] == 60).astype(int)
         )
-        
+    
         # Home ownership flags
         self.train_df = self._add_feature(
             self.train_df, 'home_ownership_rent',
@@ -125,7 +117,7 @@ class SafeFeatureEngineer:
             self.test_df, 'home_ownership_rent',
             (self.test_df['home_ownership'] == 'RENT').astype(int)
         )
-        
+    
         self.train_df = self._add_feature(
             self.train_df, 'home_ownership_mortgage',
             (self.train_df['home_ownership'] == 'MORTGAGE').astype(int)
@@ -134,7 +126,7 @@ class SafeFeatureEngineer:
             self.test_df, 'home_ownership_mortgage',
             (self.test_df['home_ownership'] == 'MORTGAGE').astype(int)
         )
-        
+    
         # Employment length numeric
         emp_map = {
             '< 1 year': 0, '1 year': 1, '2 years': 2, '3 years': 3,
@@ -143,12 +135,12 @@ class SafeFeatureEngineer:
         }
         self.train_df = self._apply_mapping(self.train_df, 'emp_length_num', emp_map)
         self.test_df = self._apply_mapping(self.test_df, 'emp_length_num', emp_map)
-        
+    
         # Grade numeric
         grade_map = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7}
         self.train_df = self._apply_mapping(self.train_df, 'grade_num', grade_map)
         self.test_df = self._apply_mapping(self.test_df, 'grade_num', grade_map)
-        
+    
         # Credit utilization (0-1 scale)
         self.train_df = self._add_feature(
             self.train_df, 'utilization',
@@ -158,7 +150,7 @@ class SafeFeatureEngineer:
             self.test_df, 'utilization',
             self.test_df['revol_util'].fillna(0) / 100
         )
-        
+    
         # FICO normalized
         self.train_df = self._add_feature(
             self.train_df, 'fico_norm',
@@ -168,7 +160,7 @@ class SafeFeatureEngineer:
             self.test_df, 'fico_norm',
             (self.test_df['fico_range_low'].fillna(600) - 600) / 250
         )
-        
+    
         logger.info("Base features applied to train and test")
         return self.train_df, self.test_df
     
