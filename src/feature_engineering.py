@@ -248,6 +248,10 @@ class SafeFeatureEngineer:
         logger.info("Domain-enhanced features applied")
         return self.train_df, self.test_df
     
+
+
+
+
     def apply_interaction_features(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Apply interaction features.
@@ -305,15 +309,15 @@ class SafeFeatureEngineer:
             self.test_df['dti'].fillna(0) * self.test_df['utilization']
         )
         
-        # Inquiry squared
-        self.train_df = self._add_feature(
-            self.train_df, 'inq_sq',
-            self.train_df['inq_last_6mths'].fillna(0) ** 2
-        )
-        self.test_df = self._add_feature(
-            self.test_df, 'inq_sq',
-            self.test_df['inq_last_6mths'].fillna(0) ** 2
-        )
+        # REMOVED: Inquiry squared (uses inq_last_6mths which was removed)
+        # self.train_df = self._add_feature(
+        #     self.train_df, 'inq_sq',
+        #     self.train_df['inq_last_6mths'].fillna(0) ** 2
+        # )
+        # self.test_df = self._add_feature(
+        #     self.test_df, 'inq_sq',
+        #     self.test_df['inq_last_6mths'].fillna(0) ** 2
+        # )
         
         # Open accounts squared
         self.train_df = self._add_feature(
