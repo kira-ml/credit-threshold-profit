@@ -16,6 +16,7 @@ from sklearn.metrics import roc_auc_score, brier_score_loss
 from sklearn.isotonic import IsotonicRegression
 import matplotlib.pyplot as plt
 import pickle
+import joblib
 from datetime import datetime
 import json
 
@@ -37,6 +38,7 @@ class ModelTrainer:
         - Performs threshold tuning and profit calculation
         - Compares performance across all configurations
         - Configurable via dictionary
+        - Saves predictions for baseline validation
     """
     
     def __init__(self, config: Dict[str, Any]):
@@ -74,62 +76,88 @@ class ModelTrainer:
         self.results = []
         self.profit_curves = {}
     
+    def save_predictions(self, model, X_test, test_ids, y_pred_proba, plan: str, model_type: str) -> None:
+        """
+        Save predictions for baseline validation.
+        
+        Args:
+            model: Trained model
+            X_test: Test features
+            test_ids: Test IDs
+            y_pred_proba: Predicted probabilities
+            plan: Feature plan name
+            model_type: Model type ('lr' or 'rf')
+        """
+        # Create predictions dataframe
+        pred_df = pd.DataFrame({
+            'id': test_ids,
+            'default_prob': y_pred_proba
+        })
+        
+        # Save predictions
+        pred_path = self.output_dir / f"predictions_{plan}_{model_type}.csv"
+        pred_df.to_csv(pred_path, index=False)
+        logger.info(f"Saved predictions to {pred_path}")
+        
+        # Save model
+        model_path = self.output_dir / f"model_{plan}_{model_type}.pkl"
+        joblib.dump(model, model_path)
+        logger.info(f"Saved model to {model_path}")
 
-
-    def load_data(self, plan: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+    def load_data(self, plan: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series, pd.Series, pd.Series]:
         """
         Load train and test data for a feature plan.
-    
+        
         Args:
             plan: Feature plan name
         
         Returns:
-            Tuple of (X_train, X_test, y_train, y_test)
+            Tuple of (X_train, X_test, y_train, y_test, train_ids, test_ids)
         """
         data_dir = Path(self.config.get('data_dir', 'data/processed'))
-    
+        
         train_path = data_dir / f"train_engineered_{plan}.parquet"
         test_path = data_dir / f"test_engineered_{plan}.parquet"
-    
+        
         if not train_path.exists() or not test_path.exists():
             raise FileNotFoundError(f"Engineered data for plan '{plan}' not found")
-    
+        
         train_df = pd.read_parquet(train_path)
         test_df = pd.read_parquet(test_path)
-    
-        # --- FIX: Drop all non-numeric columns ---
+        
+        # Store IDs for predictions
+        train_ids = train_df['id'].values if 'id' in train_df.columns else None
+        test_ids = test_df['id'].values if 'id' in test_df.columns else None
+        
+        # Drop all non-numeric columns
         string_cols_train = train_df.select_dtypes(include=['object', 'string']).columns.tolist()
         string_cols_test = test_df.select_dtypes(include=['object', 'string']).columns.tolist()
-    
+        
         datetime_cols_train = train_df.select_dtypes(include=['datetime64']).columns.tolist()
         datetime_cols_test = test_df.select_dtypes(include=['datetime64']).columns.tolist()
-    
+        
         all_non_numeric_train = string_cols_train + datetime_cols_train
         all_non_numeric_test = string_cols_test + datetime_cols_test
-    
+        
         if all_non_numeric_train:
-            logger.warning(f"Dropping non-numeric columns from train: {all_non_numeric_train}")
+            logger.debug(f"Dropping non-numeric columns from train: {all_non_numeric_train}")
             train_df = train_df.drop(columns=all_non_numeric_train)
-    
+        
         if all_non_numeric_test:
-            logger.warning(f"Dropping non-numeric columns from test: {all_non_numeric_test}")
+            logger.debug(f"Dropping non-numeric columns from test: {all_non_numeric_test}")
             test_df = test_df.drop(columns=all_non_numeric_test)
-        # --- END FIX ---
-    
-        # --- FIXED IMPUTATION: Handle train data ---
+        
+        # Fixed imputation: Handle train data
         for col in train_df.columns:
             if train_df[col].isnull().any():
                 if train_df[col].dtype in ['float64', 'float32', 'int64', 'int32']:
                     median_val = train_df[col].median()
                     train_df[col] = train_df[col].fillna(median_val)
-                    impute_val = median_val
                 else:
                     mode_val = train_df[col].mode()[0] if len(train_df[col].mode()) > 0 else 0
                     train_df[col] = train_df[col].fillna(mode_val)
-                    impute_val = mode_val
-                logger.debug(f"Imputed train column {col} with {impute_val}")
-    
-        # --- FIXED IMPUTATION: Handle test data ---
+        
+        # Fixed imputation: Handle test data using train statistics
         for col in test_df.columns:
             if test_df[col].isnull().any():
                 if col in train_df.columns:
@@ -137,45 +165,36 @@ class ModelTrainer:
                     if train_df[col].dtype in ['float64', 'float32', 'int64', 'int32']:
                         median_val = train_df[col].median()
                         test_df[col] = test_df[col].fillna(median_val)
-                        impute_val = median_val
                     else:
                         mode_val = train_df[col].mode()[0] if len(train_df[col].mode()) > 0 else 0
                         test_df[col] = test_df[col].fillna(mode_val)
-                        impute_val = mode_val
                 else:
                     # Fallback to test column statistics if column not in train
                     if test_df[col].dtype in ['float64', 'float32', 'int64', 'int32']:
                         median_val = test_df[col].median()
                         test_df[col] = test_df[col].fillna(median_val)
-                        impute_val = median_val
                     else:
                         mode_val = test_df[col].mode()[0] if len(test_df[col].mode()) > 0 else 0
                         test_df[col] = test_df[col].fillna(mode_val)
-                        impute_val = mode_val
-                logger.debug(f"Imputed test column {col} with {impute_val}")
-        # --- END FIXED IMPUTATION ---
-    
+        
         # Identify feature columns (exclude target and profit)
         exclude_cols = ['default', 'profit', 'loan_status', 'id']
         feature_cols = [c for c in train_df.columns if c not in exclude_cols]
-    
+        
         X_train = train_df[feature_cols]
         y_train = train_df['default']
         X_test = test_df[feature_cols]
         y_test = test_df['default']
-    
+        
         # Store profit values for later use
         self.train_profit = train_df['profit']
         self.test_profit = test_df['profit']
-    
+        
         logger.info(f"Loaded {plan}: Train {X_train.shape}, Test {X_test.shape}")
         logger.info(f"Missing values in train: {X_train.isnull().sum().sum()}")
         logger.info(f"Missing values in test: {X_test.isnull().sum().sum()}")
-    
-        return X_train, X_test, y_train, y_test
-    
-
-    
+        
+        return X_train, X_test, y_train, y_test, train_ids, test_ids
     
     def train_logistic_regression(self, X_train, y_train, X_test, y_test) -> Dict:
         """
@@ -317,8 +336,8 @@ class ModelTrainer:
         """
         logger.info(f"Training {model_type} on {plan}")
         
-        # Load data
-        X_train, X_test, y_train, y_test = self.load_data(plan)
+        # Load data with IDs
+        X_train, X_test, y_train, y_test, train_ids, test_ids = self.load_data(plan)
         
         # Train model
         if model_type == 'lr':
@@ -341,6 +360,17 @@ class ModelTrainer:
             'optimal_threshold': optimal_threshold,
             'optimal_profit': profits[np.argmax(profits)]
         }
+        
+        # Save predictions and model
+        if test_ids is not None:
+            self.save_predictions(
+                result['model'],
+                X_test,
+                test_ids,
+                result['y_pred_proba'],
+                plan,
+                model_type
+            )
         
         # Compile results
         result.update({
