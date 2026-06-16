@@ -471,7 +471,6 @@ class SafeFeatureEngineer:
         """Return statistics learned from training data"""
         return self.statistics.copy()
 
-
 def safe_feature_engineering_pipeline(
     train_path: Path,
     test_path: Path,
@@ -501,10 +500,36 @@ def safe_feature_engineering_pipeline(
     original_path = train_path.parent / "cleaned_preprocessed.parquet"
     if original_path.exists():
         original_df = pd.read_parquet(original_path)
-        # Add profit to train and test using index alignment
+        
+        # ============================================================
+        # CRITICAL: DROP LEAKING FEATURES BEFORE MERGING
+        # ============================================================
+        leaking_patterns = [
+            'pymnt', 'rec_', 'recover', 'fee', 'last_', 'next_',
+            'total_bal', 'total_bc', 'total_il', 'collection',
+            'charge_off', 'installment', 'funded_amnt', 'principal',
+            'interest', 'balance'
+        ]
+        
+        # Get columns to drop (excluding 'profit' and 'default')
+        columns_to_drop = []
+        for col in original_df.columns:
+            if col in ['profit', 'default']:
+                continue  # Keep these as targets
+            col_lower = col.lower()
+            if any(pattern in col_lower for pattern in leaking_patterns):
+                columns_to_drop.append(col)
+                logger.info(f"Dropping leaking feature: {col}")
+        
+        # Drop leaking columns
+        if columns_to_drop:
+            original_df = original_df.drop(columns=columns_to_drop, errors='ignore')
+            logger.info(f"Dropped {len(columns_to_drop)} leaking features")
+        
+        # Now safe to merge - only profit column remains from original data
         train_df['profit'] = original_df.loc[train_df.index, 'profit']
         test_df['profit'] = original_df.loc[test_df.index, 'profit']
-        logger.info(f"Added profit column to train and test")
+        logger.info(f"Added profit column to train and test (leaking features removed)")
     else:
         logger.warning("Original preprocessed data not found. Profit column will be missing.")
     
@@ -538,6 +563,8 @@ def safe_feature_engineering_pipeline(
     logger.info(f"Saved engineered test data to {test_output}")
     
     return train_df, test_df
+
+
 
 
 def main():

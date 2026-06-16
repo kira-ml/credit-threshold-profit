@@ -47,12 +47,9 @@ def drop_sparse_columns(df: pd.DataFrame, threshold: float = 0.90) -> pd.DataFra
         df = df.drop(columns=cols_to_drop)
         logger.info(f"Dropped {len(cols_to_drop)} columns with >{threshold:.0%} missing")
     else:
-        logger.info("No columns with >{threshold:.0%} missing")
+        logger.info(f"No columns with >{threshold:.0%} missing")
     
     return df
-
-
-
 
 
 def convert_categorical_to_string(df: pd.DataFrame) -> pd.DataFrame:
@@ -99,8 +96,6 @@ def create_grade_numeric(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-
-
 def create_emp_length_numeric(df: pd.DataFrame) -> pd.DataFrame:
     """
     Create emp_length_num feature from emp_length column.
@@ -127,7 +122,6 @@ def create_emp_length_numeric(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-
 def impute_low_missing(df: pd.DataFrame, threshold: float = 0.05) -> pd.DataFrame:
     """
     Impute columns with missing percentage below threshold.
@@ -143,7 +137,7 @@ def impute_low_missing(df: pd.DataFrame, threshold: float = 0.05) -> pd.DataFram
     cols_to_impute = missing_pct[(0 < missing_pct) & (missing_pct < threshold)].index.tolist()
     
     if not cols_to_impute:
-        logger.info("No columns with <{threshold:.0%} missing to impute")
+        logger.info(f"No columns with <{threshold:.0%} missing to impute")
         return df
     
     df = df.copy()
@@ -189,6 +183,42 @@ def remove_zero_funded_loans(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
+
+# ============================================================
+# CRITICAL FIX: REMOVE LEAKING FEATURES
+# ============================================================
+def remove_leaking_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Remove all features that leak the target variable.
+    These are payment/collection columns that are only known after loan completion.
+    """
+    logger.info("Removing leaking features (payment/collection columns)...")
+    
+    # Patterns that indicate target leakage
+    leaking_patterns = [
+        'pymnt', 'rec_', 'recover', 'fee', 'last_', 'next_',
+        'total_bal', 'total_bc', 'total_il', 'collection',
+        'charge_off', 'installment', 'principal', 'interest', 'balance'
+    ]
+    
+    # Find columns to drop (exclude 'profit' and 'default' which are targets)
+    columns_to_drop = []
+    for col in df.columns:
+        if col in ['profit', 'default']:
+            continue  # Keep target columns
+        col_lower = col.lower()
+        if any(pattern in col_lower for pattern in leaking_patterns):
+            columns_to_drop.append(col)
+    
+    # Drop the columns
+    if columns_to_drop:
+        df = df.drop(columns=columns_to_drop, errors='ignore')
+        logger.info(f"Removed {len(columns_to_drop)} leaking features")
+        # Log a sample of removed columns
+        if len(columns_to_drop) > 5:
+            logger.info(f"  Sample: {columns_to_drop[:5]}")
+    
+    return df
 
 
 def cap_extreme_outliers(df: pd.DataFrame) -> pd.DataFrame:
@@ -273,15 +303,12 @@ def handle_moderate_missing(df: pd.DataFrame, verbose: bool = False) -> pd.DataF
     return df
 
 
-
-
 def save_data(df: pd.DataFrame, output_path: Path) -> None:
     """Save preprocessed data to Parquet"""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(output_path, index=False)
     logger.info(f"Saved preprocessed data to {output_path}")
     logger.info(f"Final shape: {df.shape}")
-
 
 
 def preprocess_for_features(
@@ -315,10 +342,15 @@ def preprocess_for_features(
     df = impute_low_missing(df, threshold=missing_threshold)
     df = remove_zero_funded_loans(df)
     
-    # NEW: Handle moderate missing values (20-80%)
+    # ============================================================
+    # CRITICAL FIX: Remove leaking features before continuing
+    # ============================================================
+    df = remove_leaking_features(df)
+    
+    # Handle moderate missing values (20-80%)
     df = handle_moderate_missing(df, verbose=False)
     
-    # NEW: Cap extreme outliers
+    # Cap extreme outliers
     df = cap_extreme_outliers(df)
     
     # Log results
@@ -333,8 +365,6 @@ def preprocess_for_features(
     save_data(df, output_path)
     
     return df
-
-
 
 
 def main():
