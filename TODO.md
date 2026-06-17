@@ -1,16 +1,12 @@
-Here's your **fully updated TODO.md** with all the work we've done, including the baseline validation and model training results:
-
----
-
 # TODO.md
 
 ## Credit Threshold Profit Project
 
-*Last Updated: June 17, 2026, 3:00 AM*
+*Last Updated: June 18, 2026*
 
 ---
 
-## ✅ Completed (as of 3:00 AM)
+## ✅ Completed
 
 | Category | Task | Status |
 |----------|------|--------|
@@ -35,10 +31,14 @@ Here's your **fully updated TODO.md** with all the work we've done, including th
 | **Data Validation** | Complete validation report generated | ✅ Done |
 | **Data Quality Fixes** | Outlier capping, moderate missing value imputation added to preprocessing | ✅ Done |
 | **README Update** | Results and profit curve added | ✅ Done |
+| **Visualization Script** | Created `visualization.py` for calibration curve, confusion matrix, and feature importance | ✅ Done |
+| **PDF Report Generation** | Created `generate_report.py` for professional academic-style PDF | ✅ Done |
+| **Final Report** | `credit_threshold_profit_report.pdf` generated and committed | ✅ Done |
+| **Git Finalization** | Final commit with PDF, scripts, plots, and `.gitignore` | ✅ Done |
 
 ---
 
-## 🚧 Current State (as of 3:00 AM)
+## 🚧 Current State
 
 | Component | Status | Notes |
 |-----------|--------|-------|
@@ -51,10 +51,11 @@ Here's your **fully updated TODO.md** with all the work we've done, including th
 | **Predictions** | ✅ Complete | Saved for all 8 model/plan combinations |
 | **Baseline Validation** | ✅ Complete | Validated against 8 baselines |
 | **Executive Summary** | ✅ Complete | 1 paragraph, business impact in $ |
+| **Project Report** | ✅ Complete | 15-page professional PDF generated |
 
 ---
 
-## 🎯 Key Insights (Documentation for Paper)
+## 🎯 Key Insights
 
 | Insight | Value | Significance |
 |---------|-------|--------------|
@@ -70,7 +71,7 @@ Here's your **fully updated TODO.md** with all the work we've done, including th
 
 ---
 
-## 📊 Final Metrics (June 17, 2026)
+## 📊 Final Metrics
 
 ### Model Comparison
 
@@ -102,11 +103,11 @@ Here's your **fully updated TODO.md** with all the work we've done, including th
 | FICO-Based (≥660) | $-331,903,078 | -0.0% |
 | **Your Model (optimal)** | **$-331,622,596** | **-0.1%** |
 
-> **Note:** Test set (2016-2018) had negative returns. Your model reduces losses by $280,482 compared to approve-all.
+> **Note:** Test set (2016-2018) had negative returns. Model reduces losses by $280,482 compared to approve-all.
 
 ---
 
-## 🧠 Technical Learnings (For Your Paper)
+## 🧠 Technical Learnings
 
 | Learning | Description |
 |----------|-------------|
@@ -121,56 +122,36 @@ Here's your **fully updated TODO.md** with all the work we've done, including th
 
 ---
 
-## 🚨 Critical Debugging Log (June 16-17, 2026)
-
-| Time | Event | Resolution |
-|------|-------|------------|
-| 19:58 | Baseline cleaning completed | 1.34M rows, 110 columns |
-| 19:59 | Profit calculated | $555M total portfolio profit |
-| 20:00 | Preprocessing completed | 82 columns (25 leaking removed) |
-| 20:01 | Data split completed | 80/20 train/test by `issue_d` |
-| 20:02 | Feature engineering started | 4 plans generated |
-| 20:16 | Feature engineering failed | `installment` column missing |
-| 20:18 | Feature engineering fixed | Removed `installment` dependency |
-| 20:34 | Feature engineering failed again | `inq_last_6mths` missing |
-| 20:36 | Feature engineering fixed | Removed `inq_sq` feature |
-| 20:42 | Feature engineering completed | All 4 plans generated successfully |
-| 21:00 | Model training started | AUC = 0.9999 detected (leakage still present) |
-| 22:00 | Leakage diagnosis | Payment/collection columns still in `train_features.parquet` |
-| 22:30 | `data_preprocessing.py` fixed | `remove_leaking_features()` added |
-| 23:00 | Full pipeline re-run | All processed files deleted and regenerated |
-| 23:30 | Feature engineering re-run | All 4 plans generated successfully |
-| 23:43 | Model training re-run | AUC = 0.6671 (realistic) |
-| 23:50 | **LEAKAGE CONFIRMED RESOLVED** | ✅ AUC drop from 0.9999 → 0.6671 |
-| 00:15 | All models completed | 8 combos trained successfully |
-| 00:30 | Best model identified | Logistic Regression on `baseline_minimal` |
-| 00:45 | Predictions saved | All 8 models saved with predictions |
-| 01:00 | Baseline validation completed | Compared against 8 baselines |
-| 01:30 | Documentation complete | TODO.md updated with final results |
-| 03:00 | **Project Complete** | ✅ Ready for paper writing |
-
----
-
 ## 📁 File Structure (Final)
 
 ```
 credit-threshold-profit/
+├── credit_threshold_profit_report.pdf
+├── .gitignore
+├── requirements.txt
+├── README.md
+├── TODO.md
 ├── data/
 │   └── processed/
-│       ├── cleaned_baseline.parquet (with profit: $555M)
-│       ├── cleaned_preprocessed.parquet (leakage removed)
-│       ├── train_features.parquet (82 columns, no leakage)
-│       ├── test_features.parquet (82 columns, no leakage)
+│       ├── cleaned_baseline.parquet
+│       ├── cleaned_preprocessed.parquet
+│       ├── train_features.parquet
+│       ├── test_features.parquet
 │       ├── train_engineered_*.parquet (4 plans)
 │       └── test_engineered_*.parquet (4 plans)
 ├── src/
 │   ├── baseline_cleaning.py
 │   ├── profit_calculator.py
-│   ├── data_preprocessing.py (FIXED: leakage removal)
+│   ├── data_preprocessing.py
 │   ├── data_splitter.py
-│   ├── feature_engineering.py (FIXED: removed `installment` & `inq_last_6mths`)
-│   └── model_training.py (FIXED: saves predictions and models)
+│   ├── feature_engineering.py
+│   ├── model_training.py
+│   ├── baseline_validation.py
+│   ├── visualization.py
+│   └── generate_report.py
 ├── reports/
+│   ├── baseline_comparison.png
+│   ├── baseline_validation.csv
 │   ├── data_validation/
 │   │   └── validation_report.json
 │   ├── model_comparison/
@@ -180,14 +161,17 @@ credit-threshold-profit/
 │   │   ├── model_*.pkl (8 files)
 │   │   ├── all_profit_curves.png
 │   │   └── model_comparison.png
-│   ├── baseline_comparison.png
-│   └── baseline_validation.csv
+│   └── visualizations/
+│       ├── calibration_curve.png
+│       ├── confusion_matrix.png
+│       ├── feature_importance_lr.png
+│       └── feature_importance_rf.png
 └── TODO.md
 ```
 
 ---
 
-## 🔵 Final Deliverables (Complete)
+## 🎯 Final Deliverables
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
@@ -199,21 +183,23 @@ credit-threshold-profit/
 | 6 | Baseline validation complete | ✅ Done | Compared against 8 baselines |
 | 7 | Executive summary written | ✅ Done | "At 0.620 threshold, net profit improves by 22.3%" |
 | 8 | README updated | ✅ Done | Includes profit curve and metrics |
-| 9 | Push final version to GitHub | ✅ Done | `feature/complete-model-training` merged to `main` |
-| 10 | Write academic-style data science report | ⬜ Pending | Document methodology, results, and insights |
+| 9 | Visualization scripts added | ✅ Done | `visualization.py` and `generate_report.py` |
+| 10 | Final PDF report generated | ✅ Done | `credit_threshold_profit_report.pdf` |
+| 11 | Push final version to GitHub | ✅ Done | `feature/complete-model-training` pushed to remote |
+| 12 | Project report completed | ✅ Done | 15-page professional PDF ready for portfolio |
 
 ---
 
-## 📌 Branch Status (Final)
+## 📌 Branch Status
 
 | Branch | Status | Notes |
 |--------|--------|-------|
-| `feature/complete-model-training` | ✅ Merged | All fixes applied |
-| `main` | ✅ Complete | Ready for portfolio |
+| `feature/complete-model-training` | ✅ Complete | All final changes committed and pushed |
+| `main` | ✅ Ready for merge | Merge branch to finalize |
 
 ---
 
-## 🎯 Summary for Your Paper
+## 🎯 Project Summary
 
 ### Problem Statement
 > "Which loan applicants should a lender approve to maximize net profit? The answer isn't found in a better model — it's found in a better threshold."
@@ -233,23 +219,24 @@ credit-threshold-profit/
 - Validated calibration using Brier score (0.1489-0.1622)
 - Demonstrated that higher AUC doesn't always mean higher profit
 - Conducted comprehensive baseline validation against 8 strategies
+- Automated visualization generation and professional PDF reporting
 
 ---
 
-## 🚀 Next Steps (After Paper)
+## 🚀 Next Steps
 
-1. **Write the paper** (academic-style data science report, 5-8 pages)
+1. **Merge `feature/complete-model-training` into `main`**
 2. **Create presentation deck** (5-7 slides focusing on business impact)
-3. **Record video walkthrough** (5-10 minutes showing the profit curve)
-4. **Share on LinkedIn** (tag #DataScience #CreditRisk #MLOps #BusinessImpact)
-5. **Add to portfolio** (GitHub + personal website with live demo)
+3. **Share on LinkedIn** (tag #DataScience #CreditRisk #Finance #Portfolio)
+4. **Add to portfolio** (GitHub + personal website)
 
 ---
 
-## 📌 Quick Links for Your Paper
+## 📌 Quick Links
 
 | Section | Location |
 |---------|----------|
+| **Final Project Report** | `credit_threshold_profit_report.pdf` |
 | **Profit Curve Visualization** | `reports/model_comparison/all_profit_curves.png` |
 | **Model Comparison Plot** | `reports/model_comparison/model_comparison.png` |
 | **Baseline Comparison Plot** | `reports/baseline_comparison.png` |
@@ -259,5 +246,3 @@ credit-threshold-profit/
 ---
 
 ## 🎉 **Project Status: COMPLETE**
-
-**You're ready to write your paper and share your work on LinkedIn. Sleep well — you've earned it!** 🚀
