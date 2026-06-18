@@ -279,11 +279,16 @@ class ReportGenerator:
                 plan = row['plan'].replace('_', ' ').title()
                 if plan in ['Mi Informed', 'Ml Informed']: plan = 'ML Informed'
                 model = "Logistic Regression" if row['model_type'] == 'lr' else "Random Forest"
+                
+                # FIX: Ensure we pass a Paragraph object, not a raw string, for bold text
                 profit_str = f"${row['optimal_profit']:,.0f}"
                 if row['optimal_profit'] == df['optimal_profit'].max():
-                    profit_str = f"<b>{profit_str}</b>"
+                    profit_cell = Paragraph(f"<b>{profit_str}</b>", styles['TableCell'])
+                else:
+                    profit_cell = Paragraph(profit_str, styles['TableCell'])
+                
                 table_data.append([plan, model, f"{row['auc']:.4f}", f"{row['brier']:.4f}", 
-                                   f"{row['optimal_threshold']:.3f}", profit_str])
+                                   f"{row['optimal_threshold']:.3f}", profit_cell])
             
             t = Table(table_data, colWidths=[1.3*inch, 1.7*inch, 0.7*inch, 0.7*inch, 0.9*inch, 1.1*inch])
             t.setStyle(TableStyle([
