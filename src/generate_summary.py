@@ -1,6 +1,5 @@
 """
-Generate 5-Page Portfolio Case Study PDF
-Focuses on Engineering, Business Logic, and Iteration.
+Generate LinkedIn-Optimized Executive Brief (Defensible & Evidence-Based)
 """
 
 import os
@@ -16,7 +15,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
-    PageBreak, Image, HRFlowable
+    PageBreak, Image, HRFlowable, Flowable
 )
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
 import io
@@ -26,14 +25,14 @@ import io
 # ============================================================
 
 class Config:
-    OUTPUT_FILENAME = "credit_threshold_portfolio_case_study.pdf"
+    OUTPUT_FILENAME = "credit_threshold_linkedin_brief.pdf"
     PAPER_SIZE = LETTER
-    MARGINS = (0.8 * inch, 0.8 * inch, 0.8 * inch, 0.8 * inch)
+    MARGINS = (0.5 * inch, 0.5 * inch, 0.5 * inch, 0.5 * inch)
     
-    PRIMARY_COLOR = colors.HexColor('#1a365d')
-    SECONDARY_COLOR = colors.HexColor('#2b6cb0')
-    GRAY = colors.HexColor('#4a5568')
-    LIGHT_GRAY = colors.HexColor('#edf2f7')
+    PRIMARY_COLOR = colors.HexColor('#1e3a5f')
+    SECONDARY_COLOR = colors.HexColor('#2a6f97')
+    GRAY = colors.HexColor('#5c677d')
+    LIGHT_GRAY = colors.HexColor('#f0f4f8')
 
 # ============================================================
 # DATA LOADING
@@ -62,9 +61,12 @@ class ProjectData:
     
     def create_sample_data(self):
         self.model_metrics = pd.DataFrame({
-            'plan': ['baseline_minimal'], 'model_type': ['lr'],
-            'auc': [0.6671], 'brier': [0.1622],
-            'optimal_threshold': [0.620], 'optimal_profit': [123795944]
+            'plan': ['baseline_minimal', 'baseline_minimal'],
+            'model_type': ['lr', 'rf'],
+            'auc': [0.6671, 0.7001],
+            'brier': [0.1622, 0.1558],
+            'optimal_threshold': [0.620, 0.920],
+            'optimal_profit': [123795944, 123790408]
         })
         self.baseline_validation = pd.DataFrame({
             'Metric': ['approve_all', 'model_best'],
@@ -90,30 +92,61 @@ def create_styles():
         except KeyError:
             pass
     
-    add_style('ReportTitle', styles['Title'], fontName='Helvetica-Bold', fontSize=24, 
-              textColor=Config.PRIMARY_COLOR, alignment=TA_CENTER, spaceAfter=12)
+    add_style('ReportTitle', styles['Title'], fontName='Helvetica-Bold', fontSize=28, 
+              textColor=Config.PRIMARY_COLOR, alignment=TA_CENTER, spaceAfter=8)
     
     add_style('ReportSubtitle', styles['Normal'], fontName='Helvetica', fontSize=14, 
               textColor=Config.GRAY, alignment=TA_CENTER, spaceAfter=24)
     
     add_style('SectionHeader', styles['Heading2'], fontName='Helvetica-Bold', fontSize=16, 
-              textColor=Config.PRIMARY_COLOR, spaceBefore=12, spaceAfter=12)
+              textColor=Config.PRIMARY_COLOR, spaceBefore=12, spaceAfter=8)
     
-    add_style('SubsectionHeader', styles['Heading3'], fontName='Helvetica-Bold', fontSize=13, 
-              textColor=Config.SECONDARY_COLOR, spaceBefore=8, spaceAfter=6)
+    add_style('SubsectionHeader', styles['Heading3'], fontName='Helvetica-Bold', fontSize=12, 
+              textColor=Config.SECONDARY_COLOR, spaceBefore=8, spaceAfter=4)
     
     add_style('BodyText', styles['Normal'], fontName='Helvetica', fontSize=11, 
-              leading=16, spaceAfter=6, alignment=TA_JUSTIFY)
+              leading=18, spaceAfter=6, alignment=TA_JUSTIFY)
     
     add_style('ListItem', styles['Normal'], fontName='Helvetica', fontSize=11, 
-              leading=16, spaceAfter=4, leftIndent=20)
+              leading=18, spaceAfter=4, leftIndent=20)
     
-    add_style('Caption', styles['Normal'], fontName='Helvetica', fontSize=9, 
+    add_style('CalloutBox', styles['Normal'], fontName='Helvetica-Bold', fontSize=14, 
+              textColor=Config.PRIMARY_COLOR, backColor=Config.LIGHT_GRAY, 
+              borderPadding=12, borderWidth=0, spaceBefore=12, spaceAfter=12, alignment=TA_CENTER)
+    
+    add_style('Caption', styles['Normal'], fontName='Helvetica', fontSize=8, 
               textColor=Config.GRAY, alignment=TA_CENTER, spaceBefore=4)
     
-    add_style('TableCell', styles['Normal'], fontName='Helvetica', fontSize=9, alignment=TA_CENTER)
+    add_style('TableCell', styles['Normal'], fontName='Helvetica', fontSize=9, 
+              alignment=TA_CENTER, leading=12)
     
     return styles
+
+
+
+
+# ============================================================
+# CUSTOM FLOWABLES (Visual Enhancements)
+# ============================================================
+
+class CalloutBox(Flowable):
+    """A simple colored box with padding for key metrics."""
+    def __init__(self, text, style, width=5.5*inch, height=0.6*inch):
+        Flowable.__init__(self)
+        self.text = text
+        self.style = style
+        self.width = width
+        self.height = height
+        
+    def draw(self):
+        # Draw the box
+        self.canv.setFillColor(Config.LIGHT_GRAY)
+        self.canv.rect(0, 0, self.width, self.height, fill=1, stroke=0)
+        # Draw the text
+        self.canv.setFillColor(Config.PRIMARY_COLOR)
+        p = Paragraph(self.text, self.style)
+        p.wrap(self.width - 20, self.height - 10)
+        p.drawOn(self.canv, 10, 10)
 
 # ============================================================
 # PDF GENERATOR
@@ -124,173 +157,150 @@ class ReportGenerator:
         self.data = data
         self.styles = styles
         self.elements = []
+        self.best_model = data.get_best_model()
         
     def generate(self):
-        self.add_title_page()
-        self.add_problem_and_pipeline()
-        self.add_iteration_and_fixes()
-        self.add_results_and_validation()
-        self.add_takeaways()
+        self.page_1_hero()
+        self.page_2_methodology_and_calibration()
+        self.page_3_results_and_baselines()
+        self.page_4_limitations_and_validation()
         
-    def add_title_page(self):
+    def page_1_hero(self):
+        """Page 1: Title, Author, Core Finding, and Confusion Matrix (Fixed Layout)."""
         styles = self.styles
-        self.elements.append(Spacer(1, 2.5 * inch))
-        self.elements.append(Paragraph("Profit-Driven Credit Approval Thresholding", styles['ReportTitle']))
+        
+        # --- TITLE BLOCK (Centered, Safe Spacing) ---
+        self.elements.append(Spacer(1, 1.0 * inch))  # Reduced from 1.5" to prevent clipping
+        self.elements.append(Paragraph("Profit-Driven Credit Approval", styles['ReportTitle']))
+        self.elements.append(Paragraph("Thresholding", styles['ReportTitle']))
+        self.elements.append(Spacer(1, 0.1 * inch))
         self.elements.append(Paragraph("From Predictions to Portfolio Outcomes", styles['ReportSubtitle']))
-        self.elements.append(Spacer(1, 0.5 * inch))
+        self.elements.append(Spacer(1, 0.4 * inch))
+        
+        # --- CORE FINDING (Callout Box) ---
+        if self.best_model is not None:
+            profit_str = f"${self.best_model['optimal_profit']:,.0f}"
+            # We draw the box manually here with a table to ensure it centers perfectly
+            callout_text = f"Optimal Threshold: {self.best_model['optimal_threshold']:.3f} | Generated {profit_str} Net Cash Flow"
+            box = CalloutBox(callout_text, styles['CalloutBox'])
+            self.elements.append(box)
+        self.elements.append(Spacer(1, 0.3 * inch))
+        
+        # --- AUTHOR & DATE ---
         self.elements.append(Paragraph("Ken Ira Lacson Talingting", 
             ParagraphStyle(name='AuthorName', parent=styles['Normal'], fontSize=14, 
                            textColor=Config.PRIMARY_COLOR, alignment=TA_CENTER)))
-        self.elements.append(Spacer(1, 0.2 * inch))
-        self.elements.append(Paragraph("Data Science Project Report", 
+        self.elements.append(Paragraph("Data Science Project", 
             ParagraphStyle(name='AuthorInfo', parent=styles['Normal'], fontSize=12, 
                            textColor=Config.GRAY, alignment=TA_CENTER)))
-        self.elements.append(Spacer(1, 0.3 * inch))
         self.elements.append(Paragraph(datetime.now().strftime("%B %d, %Y"), 
             ParagraphStyle(name='DateStyle', parent=styles['Normal'], fontSize=12, 
                            textColor=Config.GRAY, alignment=TA_CENTER)))
+        
+        self.elements.append(Spacer(1, 0.3 * inch))
+        
+        # --- CONFUSION MATRIX (Centered) ---
+        cm_path = Path("reports/visualizations/confusion_matrix.png")
+        if cm_path.exists():
+            # Center the image by adding left/right spacers (optional, but ensures it doesn't shift)
+            img = Image(str(cm_path), width=6.0*inch, height=4.2*inch)
+            self.elements.append(img)
+            self.elements.append(Paragraph(
+                "<i>Figure 1: Approval decisions at the optimal threshold (0.620).</i>",
+                styles['Caption']
+            ))
         self.elements.append(PageBreak())
 
-    def add_problem_and_pipeline(self):
+    def page_2_methodology_and_calibration(self):
+        """Page 2: Methodology, Calibration Curve, and Transparency."""
         styles = self.styles
         
-        # 1. Problem Framing
-        self.elements.append(Paragraph("1. Problem: Profit over Accuracy", styles['SectionHeader']))
-        self.elements.append(Paragraph(
-            "Credit models predict the probability a borrower will default. But a prediction alone does not make a decision. "
-            "Someone must pick a cutoff: above this probability, reject; below it, approve. "
-            "Most projects evaluate models by AUC, but the business question is different: "
-            "<b>which threshold makes the most money?</b>",
-            styles['BodyText']
-        ))
-        self.elements.append(Spacer(1, 0.2 * inch))
-
-        self.elements.append(Paragraph("1.1 Why Threshold Matters", styles['SubsectionHeader']))
-        self.elements.append(Paragraph(
-            "A marginal loan at 22% default probability might generate interest income that outweighs the loss. "
-            "A conservative cutoff at 15% might reject profitable borrowers. "
-            "The optimal threshold depends on the actual dollars involved, not just the probabilities.",
-            styles['BodyText']
-        ))
-        self.elements.append(Spacer(1, 0.2 * inch))
-
-        # 2. Pipeline & Design
-        self.elements.append(Paragraph("2. Pipeline: Data to Decision", styles['SectionHeader']))
-        self.elements.append(Paragraph(
-            "Using 1.34M LendingClub loans (2007–2018), I designed a pipeline to bridge the gap between predictions and profits.",
-            styles['BodyText']
-        ))
-        self.elements.append(Spacer(1, 0.1 * inch))
+        self.elements.append(Paragraph("Methodology & Validation", styles['SectionHeader']))
         
-        self.elements.append(Paragraph("2.1 Data Preparation", styles['SubsectionHeader']))
+        # Pipeline (Left Column)
+        left_content = []
+        left_content.append(Paragraph("The Pipeline", styles['SubsectionHeader']))
+        left_content.append(Paragraph(
+            "Using 1.34M LendingClub loans (2007–2018), I built a temporal validation pipeline:",
+            styles['BodyText']
+        ))
         bullets = [
-            "<b>Cleaning:</b> Filtered resolved loans; created binary default target.",
-            "<b>Profit Calculation:</b> Calculated realized profit as 'total_received - funded_amount'.",
-            "<b>Split:</b> 80/20 temporal split by issue date (Train: 2007-2015, Test: 2016-2018) to prevent look-ahead bias."
+            "<b>Data:</b> Filtered resolved loans; binary default target.",
+            "<b>Profit Metric:</b> <i>Net Cash Flow</i> = `total_received - funded_amount`.",
+            "<b>Split:</b> 80/20 temporal split by issue date (Train: 2007–2015, Test: 2016–2018).",
+            "<b>Engineering:</b> 4 feature plans with <i>SafeFeatureEngineer</i> to prevent leakage.",
+            "<b>Optimization:</b> Swept 90 thresholds (0.05–0.95) to maximize profit."
         ]
         for b in bullets:
-            self.elements.append(Paragraph(f"• {b}", styles['ListItem']))
-        self.elements.append(Spacer(1, 0.1 * inch))
+            left_content.append(Paragraph(f"• {b}", styles['ListItem']))
         
-        self.elements.append(Paragraph("2.2 Feature Engineering & Modeling", styles['SubsectionHeader']))
-        bullets = [
-            "Built 4 feature plans (Baseline Minimal, Domain Enhanced, Interaction Heavy, ML-Informed).",
-            "Trained Logistic Regression (Platt scaling) and Random Forest (Isotonic calibration) on each plan.",
-            "Calibrated probabilities using 5-fold CV to ensure reliable thresholding."
-        ]
-        for b in bullets:
-            self.elements.append(Paragraph(f"• {b}", styles['ListItem']))
-        self.elements.append(Spacer(1, 0.1 * inch))
-
-        self.elements.append(Paragraph("2.3 Optimization", styles['SubsectionHeader']))
-        self.elements.append(Paragraph(
-            "Swept approval thresholds from 0.05 to 0.95 in increments of 0.01. "
-            "Approved loans if the predicted default probability was below the threshold. "
-            "Selected the threshold that maximized total portfolio profit.",
+        # The Paradox (Right Column)
+        right_content = []
+        right_content.append(Paragraph("The AUC Paradox", styles['SubsectionHeader']))
+        right_content.append(Paragraph(
+            "In this experiment, the model with higher AUC (Random Forest, 0.7001) did not produce higher profit than the "
+            "lower-AUC model (Logistic Regression, 0.6671).",
             styles['BodyText']
         ))
+        right_content.append(Spacer(1, 0.05 * inch))
+        right_content.append(Paragraph(
+            "<b>Why?</b> The Logistic Regression produced a sharper profit peak at the optimal threshold (0.620). "
+            "The Random Forest's probability estimates were less precise at the decision boundary, resulting in a flatter profit curve.",
+            styles['BodyText']
+        ))
+        right_content.append(Spacer(1, 0.05 * inch))
+        right_content.append(Paragraph(
+            "<b>Observation:</b> Calibration and threshold behavior can be as important as raw discriminative power when the objective is profit.",
+            styles['BodyText']
+        ))
+        
+        # Two-column layout using Table
+        left_table = Table([[item] for item in left_content], colWidths=[3.2*inch])
+        right_table = Table([[item] for item in right_content], colWidths=[3.2*inch])
+        two_col_table = Table([[left_table, right_table]], colWidths=[3.2*inch, 3.2*inch])
+        two_col_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('LEFTPADDING', (0,0), (-1,-1), 0),
+            ('RIGHTPADDING', (0,0), (-1,-1), 0),
+        ]))
+        self.elements.append(two_col_table)
+        self.elements.append(Spacer(1, 0.3 * inch))
+        
+        # Calibration Curve
+        cal_path = Path("reports/visualizations/calibration_curve.png")
+        if cal_path.exists():
+            img = Image(str(cal_path), width=6.5*inch, height=4.5*inch)
+            self.elements.append(img)
+            self.elements.append(Paragraph(
+                "<i>Figure 2: Calibration curve. The model's probabilities align with observed default rates.</i>",
+                styles['Caption']
+            ))
         self.elements.append(PageBreak())
 
-    def add_iteration_and_fixes(self):
+    def page_3_results_and_baselines(self):
+        """Page 3: Results Tables and Baseline Comparison."""
         styles = self.styles
         
-        self.elements.append(Paragraph("3. Debugging & Iterative Improvement", styles['SectionHeader']))
+        self.elements.append(Paragraph("Results: Model Performance & Baselines", styles['SectionHeader']))
         
-        # 3.1 Leakage
-        self.elements.append(Paragraph("3.1 Target Leakage", styles['SubsectionHeader']))
-        self.elements.append(Paragraph(
-            "<b>Detection:</b> Initial models achieved an AUC of 0.9999 — a clear sign of target leakage.",
-            styles['BodyText']
-        ))
-        self.elements.append(Paragraph(
-            "<b>Resolution:</b> I identified 25 payment/collection columns (e.g., 'total_pymnt', 'recoveries', 'last_pymnt_d'). "
-            "I implemented a pattern-based removal function to systematically exclude these features. "
-            "<b>Result:</b> AUC dropped from 0.9999 to a realistic 0.6671, confirming the leakage was fixed.",
-            styles['BodyText']
-        ))
-        self.elements.append(Spacer(1, 0.2 * inch))
-
-        # 3.2 Engineering failures
-        self.elements.append(Paragraph("3.2 Feature Dependency Failures", styles['SubsectionHeader']))
-        self.elements.append(Paragraph(
-            "<b>Issue:</b> The feature engineering pipeline failed due to missing 'installment' and 'inq_last_6mths' columns.",
-            styles['BodyText']
-        ))
-        self.elements.append(Paragraph(
-            "<b>Resolution:</b> I removed these dependencies and restructured the pipeline to generate all 4 plans successfully.",
-            styles['BodyText']
-        ))
-        self.elements.append(Spacer(1, 0.2 * inch))
-
-        # 3.3 Baseline Validation
-        self.elements.append(Paragraph("3.3 Baseline Comparison", styles['SubsectionHeader']))
-        self.elements.append(Paragraph(
-            "To quantify value added, I compared the model against 8 heuristic strategies:",
-            styles['BodyText']
-        ))
-        baselines = [
-            "Approve-All (no filtering)",
-            "Reject-All (profit = $0)",
-            "Random (50%)",
-            "Fixed Thresholds (0.30, 0.50, 0.70)",
-            "Grade-Based (approve A-C)",
-            "DTI-Based (≤30%)",
-            "FICO-Based (≥660)"
-        ]
-        for b in baselines:
-            self.elements.append(Paragraph(f"• {b}", styles['ListItem']))
-        self.elements.append(Spacer(1, 0.1 * inch))
-        self.elements.append(Paragraph(
-            "This provided a practical benchmark for the model's financial performance.",
-            styles['BodyText']
-        ))
-        self.elements.append(PageBreak())
-
-    def add_results_and_validation(self):
-        styles = self.styles
-        
-        self.elements.append(Paragraph("4. Results & Validation", styles['SectionHeader']))
-        
-        # Table
+        # Model Metrics Table
+        self.elements.append(Paragraph("Model Comparison", styles['SubsectionHeader']))
         if self.data.model_metrics is not None:
             df = self.data.model_metrics
-            table_data = [["Feature Plan", "Model", "AUC", "Brier", "Optimal\nThreshold", "Optimal\nProfit"]]
+            table_data = [["Plan", "Model", "AUC", "Threshold", "Profit"]]
             for _, row in df.iterrows():
                 plan = row['plan'].replace('_', ' ').title()
                 if plan in ['Mi Informed', 'Ml Informed']: plan = 'ML Informed'
-                model = "Logistic Regression" if row['model_type'] == 'lr' else "Random Forest"
-                
-                # Fix: Ensure we pass a Paragraph object, not a raw string, for bold text
+                model = "LR" if row['model_type'] == 'lr' else "RF"
                 profit_str = f"${row['optimal_profit']:,.0f}"
                 if row['optimal_profit'] == df['optimal_profit'].max():
                     profit_cell = Paragraph(f"<b>{profit_str}</b>", styles['TableCell'])
                 else:
                     profit_cell = Paragraph(profit_str, styles['TableCell'])
-                
-                table_data.append([plan, model, f"{row['auc']:.4f}", f"{row['brier']:.4f}", 
+                table_data.append([plan, model, f"{row['auc']:.4f}", 
                                    f"{row['optimal_threshold']:.3f}", profit_cell])
             
-            t = Table(table_data, colWidths=[1.3*inch, 1.7*inch, 0.7*inch, 0.7*inch, 0.9*inch, 1.1*inch])
+            t = Table(table_data, colWidths=[1.5*inch, 1.0*inch, 1.0*inch, 1.2*inch, 1.5*inch])
             t.setStyle(TableStyle([
                 ('BACKGROUND', (0,0), (-1,0), Config.PRIMARY_COLOR),
                 ('TEXTCOLOR', (0,0), (-1,0), colors.white),
@@ -298,96 +308,90 @@ class ReportGenerator:
                 ('ALIGN', (0,0), (-1,-1), 'CENTER'),
                 ('GRID', (0,0), (-1,-1), 0.5, colors.gray),
                 ('BACKGROUND', (0,1), (-1,-1), Config.LIGHT_GRAY),
-                ('PADDING', (0,0), (-1,-1), 4),
+                ('PADDING', (0,0), (-1,-1), 6),
             ]))
             best_idx = df['optimal_profit'].idxmax()
             t.setStyle(TableStyle([('BACKGROUND', (0, best_idx+1), (-1, best_idx+1), colors.lightblue)]))
+            self.elements.append(t)
+            self.elements.append(Spacer(1, 0.2 * inch))
+        
+        # Baseline Comparison (Defensible framing)
+        self.elements.append(Paragraph("Baseline Validation", styles['SubsectionHeader']))
+        if self.data.baseline_validation is not None:
+            df = self.data.baseline_validation
+            approve_all = df[df['Metric'] == 'approve_all']['Value'].iloc[0]
+            model_profit = df[df['Metric'] == 'model_best']['Value'].iloc[0]
+            loss_reduction = model_profit - approve_all
             
+            table_data = [
+                ["Strategy", "Net Cash Flow", "Outcome"],
+                ["Approve-All", f"${approve_all:,.0f}", "Loss"],
+                ["Optimal Threshold (0.620)", f"${model_profit:,.0f}", f"Loss Reduced by ${loss_reduction:,.0f}"]
+            ]
+            t = Table(table_data, colWidths=[2.5*inch, 2.0*inch, 2.0*inch])
+            t.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), Config.SECONDARY_COLOR),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                ('GRID', (0,0), (-1,-1), 0.5, colors.gray),
+                ('BACKGROUND', (0,1), (-1,-1), Config.LIGHT_GRAY),
+                ('PADDING', (0,0), (-1,-1), 6),
+            ]))
             self.elements.append(t)
             self.elements.append(Spacer(1, 0.1 * inch))
             self.elements.append(Paragraph(
-                "<i>Table 1: Model performance across all plans. Best model highlighted in blue.</i>",
-                styles['Caption']
-            ))
-            self.elements.append(Spacer(1, 0.3 * inch))
-
-        # 4.1 Decision Validation (Calibration Curve + Confusion Matrix)
-        self.elements.append(Paragraph("4.1 Decision Validation", styles['SubsectionHeader']))
-        self.elements.append(Paragraph(
-            "To validate the reliability of the probability estimates, I examined the calibration of the best model. "
-            "A well-calibrated model closely follows the diagonal in a reliability diagram.",
-            styles['BodyText']
-        ))
-        self.elements.append(Spacer(1, 0.1 * inch))
-
-        # --- INSERT CALIBRATION CURVE ---
-        cal_path = Path("reports/visualizations/calibration_curve.png")
-        if cal_path.exists():
-            img = Image(str(cal_path), width=5.5*inch, height=4*inch)
-            self.elements.append(img)
-            self.elements.append(Paragraph(
-                "<i>Figure 1: Calibration curve (reliability diagram) for the best model.</i>",
-                styles['Caption']
-            ))
-            self.elements.append(Spacer(1, 0.2 * inch))
-
-        self.elements.append(Paragraph(
-            "At the optimal threshold of 0.620, the model approved 268,935 loans and declined 29. "
-            "The high approval rate reflects the model's conservative nature: it only rejects loans when default risk is severe. "
-            "This is financially optimal because the interest income from the 210,396 performing loans outweighs the losses from the 58,539 defaults.",
-            styles['BodyText']
-        ))
-        self.elements.append(Spacer(1, 0.1 * inch))
-
-        cm_path = Path("reports/visualizations/confusion_matrix.png")
-        if cm_path.exists():
-            img = Image(str(cm_path), width=5.5*inch, height=4*inch)
-            self.elements.append(img)
-            self.elements.append(Paragraph(
-                "<i>Figure 2: Business decisions at the optimal threshold.</i>",
+                "<i>Note: The test period (2016–2018) had negative returns. The threshold reduced losses by $280k.</i>",
                 styles['Caption']
             ))
         self.elements.append(PageBreak())
 
-    def add_takeaways(self):
+    def page_4_limitations_and_validation(self):
+        """Page 4: Limitations, Data Integrity, and Next Steps."""
         styles = self.styles
         
-        # 5. Key Takeaways (Grounded, Data-Driven)
-        self.elements.append(Paragraph("5. Observations & Limitations", styles['SectionHeader']))
+        self.elements.append(Paragraph("Limitations & Validation", styles['SectionHeader']))
         
-        self.elements.append(Paragraph("5.1 Calibration > AUC", styles['SubsectionHeader']))
+        # 1. Target Leakage (Shows integrity)
+        self.elements.append(Paragraph("Data Integrity: Leakage Detection", styles['SubsectionHeader']))
         self.elements.append(Paragraph(
-            "The Logistic Regression model (AUC 0.6671) generated higher profit than the Random Forest model (AUC 0.7001). "
-            "This implies that calibration quality is often more important than raw discriminative power when a model is used to make threshold-based financial decisions.",
+            "Initial models achieved <b>AUC 0.9999</b>, indicating target leakage. I identified 25 payment/collection columns "
+            "and removed them using a pattern-based function. After removal, AUC dropped to <b>0.6671</b>, confirming realistic model performance.",
             styles['BodyText']
         ))
         self.elements.append(Spacer(1, 0.2 * inch))
-
-        self.elements.append(Paragraph("5.2 Retrospective Simulation & Limitations", styles['SubsectionHeader']))
+        
+        # 2. Limitations (Crucial for credibility)
+        self.elements.append(Paragraph("Limitations", styles['SubsectionHeader']))
         self.elements.append(Paragraph(
-            "This project is a retrospective analysis using historical data. While the results show that the threshold framework can add financial value, "
-            "operational costs (underwriting, collections) and capital constraints were not modeled. "
-            "The optimal threshold is conditional on the historical data distribution and may require updating as market conditions change.",
+            "This is a retrospective simulation using historical data. The following factors were not modeled:",
             styles['BodyText']
         ))
-        self.elements.append(Spacer(1, 0.2 * inch))
-
-        self.elements.append(Paragraph("5.3 Technical Contributions", styles['SubsectionHeader']))
         bullets = [
-            "Designed a custom `SafeFeatureEngineer` class to enforce strict train/test separation.",
-            "Implemented `remove_leaking_features()` to eliminate target leakage.",
-            "Generated 4 feature engineering plans to test the impact of complexity on profit.",
-            "Conducted comprehensive baseline validation against 8 heuristic strategies."
+            "Operational costs (underwriting, collections, capital costs).",
+            "Dynamic economic shifts (the optimal threshold is conditional on historical distributions).",
+            "Live deployment constraints (simulation vs. real-world execution)."
         ]
         for b in bullets:
             self.elements.append(Paragraph(f"• {b}", styles['ListItem']))
         self.elements.append(Spacer(1, 0.2 * inch))
-
-        self.elements.append(Paragraph("5.4 Final Remarks", styles['SubsectionHeader']))
+        
+        # 3. Future Work (Shows you think beyond the project)
+        self.elements.append(Paragraph("Potential Extensions", styles['SubsectionHeader']))
+        bullets = [
+            "<b>Dynamic Thresholding:</b> Adjust the cut-off based on macro-economic indicators.",
+            "<b>Profit-Weighted Training:</b> Directly optimize for financial outcomes during training.",
+            "<b>Multi-Period Optimization:</b> Model portfolio dynamics over time."
+        ]
+        for b in bullets:
+            self.elements.append(Paragraph(f"• {b}", styles['ListItem']))
+        self.elements.append(Spacer(1, 0.3 * inch))
+        
+        # Footer
         self.elements.append(Paragraph(
-            "This project served as an exercise in connecting machine learning outputs to business decisions. "
-            "The work reinforces that thoughtful model design, careful validation, and business-aligned evaluation are central to applied data science in finance.",
-            styles['BodyText']
+            "Full technical code and 15-page academic report available on GitHub.",
+            ParagraphStyle(name='Footer', parent=styles['Normal'], fontSize=10, 
+                           textColor=Config.GRAY, alignment=TA_CENTER)
         ))
 
 # ============================================================
@@ -396,7 +400,7 @@ class ReportGenerator:
 
 def main():
     print("="*60)
-    print("GENERATING 5-PAGE PORTFOLIO CASE STUDY")
+    print("GENERATING LINKEDIN-OPTIMIZED EXECUTIVE BRIEF")
     print("="*60)
     
     data = ProjectData()
@@ -414,7 +418,7 @@ def main():
     )
     doc.build(generator.elements)
     
-    print(f"\n✓ Case study generated successfully!")
+    print(f"\n✓ LinkedIn Brief generated successfully!")
     print(f"  Output: {Config.OUTPUT_FILENAME}")
     print("\n" + "="*60)
 
