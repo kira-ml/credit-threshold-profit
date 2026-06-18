@@ -1,5 +1,6 @@
 """
-Generate 3-Page Portfolio Summary PDF for Credit Threshold Project
+Generate 4-Page Process-Focused Portfolio Summary
+Highlights workflow, failures, iterations, and business decisions.
 """
 
 import os
@@ -17,7 +18,7 @@ from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
     PageBreak, Image, HRFlowable
 )
-from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
 import io
 
 # ============================================================
@@ -25,7 +26,7 @@ import io
 # ============================================================
 
 class SummaryConfig:
-    OUTPUT_FILENAME = "credit_threshold_summary.pdf"
+    OUTPUT_FILENAME = "credit_threshold_process_summary.pdf"
     PAPER_SIZE = LETTER
     MARGINS = (0.8 * inch, 0.8 * inch, 0.8 * inch, 0.8 * inch)
     
@@ -35,7 +36,7 @@ class SummaryConfig:
     LIGHT_GRAY = colors.HexColor('#edf2f7')
 
 # ============================================================
-# DATA LOADING (Reused from original)
+# DATA LOADING
 # ============================================================
 
 class SummaryData:
@@ -115,7 +116,7 @@ def create_styles():
     return styles
 
 # ============================================================
-# PDF GENERATOR (3-Page Summary)
+# PDF GENERATOR (4-Page Process Summary)
 # ============================================================
 
 class SummaryGenerator:
@@ -126,8 +127,9 @@ class SummaryGenerator:
         
     def generate(self):
         self.add_title_page()
-        self.add_summary_body()
-        self.add_results_highlights()
+        self.add_problem_and_approach()
+        self.add_debugging_and_experiments()
+        self.add_results_and_takeaways()
         
     def add_title_page(self):
         styles = self.styles
@@ -148,63 +150,88 @@ class SummaryGenerator:
                            textColor=SummaryConfig.GRAY, alignment=TA_CENTER)))
         self.elements.append(PageBreak())
 
-    def add_summary_body(self):
+    def add_problem_and_approach(self):
         styles = self.styles
-        best = self.data.get_best_model()
         
-        # Problem Statement
-        self.elements.append(Paragraph("Problem", styles['SectionHeader']))
+        # Problem Framing (From README)
+        self.elements.append(Paragraph("1. The Problem", styles['SectionHeader']))
         self.elements.append(Paragraph(
-            "Which loan applicants should a lender approve to maximize net profit? "
-            "Credit models are often evaluated on accuracy, but the business objective is profitability. "
-            "This project optimizes the approval threshold of a probabilistic classifier using historical LendingClub data.",
+            "Credit models predict the probability a borrower will default. But a prediction alone does not make a decision. "
+            "Someone must pick a cutoff: above this probability, reject; below it, approve. "
+            "Most projects evaluate models by AUC or accuracy, but the business question is different: "
+            "<b>which threshold makes the most money?</b>",
+            styles['BodyText']
+        ))
+        self.elements.append(Spacer(1, 0.2 * inch))
+
+        # Core Philosophy
+        self.elements.append(Paragraph("Framing", styles['SubsectionHeader']))
+        self.elements.append(Paragraph(
+            "A marginal loan at 22% default probability might generate interest income that outweighs the loss. "
+            "A conservative cutoff at 15% might reject profitable borrowers. "
+            "The optimal threshold depends on the actual dollars involved, not just the probabilities.",
             styles['BodyText']
         ))
         self.elements.append(Spacer(1, 0.2 * inch))
 
         # Approach
-        self.elements.append(Paragraph("Approach", styles['SectionHeader']))
+        self.elements.append(Paragraph("2. Approach & Pipeline", styles['SectionHeader']))
+        self.elements.append(Paragraph(
+            "Using 1.34M LendingClub loans (2007–2018), I built a pipeline that:",
+            styles['BodyText']
+        ))
         bullets = [
-            "Used 1.34M LendingClub loans (2007–2018) with 4 feature engineering plans.",
-            "Trained Logistic Regression and Random Forest models with probability calibration.",
-            "Swept approval thresholds from 0.05 to 0.95 and calculated realized portfolio profit at each step."
+            "Calculated realized profit (total payments - funded amount) for each loan.",
+            "Implemented 4 progressively complex feature engineering plans (Baseline, Domain, Interaction, ML-Informed).",
+            "Trained Logistic Regression (Platt scaling) and Random Forest (Isotonic calibration) on each plan.",
+            "Swept approval thresholds from 0.05 to 0.95 and calculated portfolio profit at each step."
         ]
         for b in bullets:
             self.elements.append(Paragraph(f"• {b}", styles['ListItem']))
-        self.elements.append(Spacer(1, 0.2 * inch))
-
-        # Key Results Text
-        self.elements.append(Paragraph("Key Results", styles['SectionHeader']))
-        if best is not None:
-            self.elements.append(Paragraph(
-                f"<b>Best Model:</b> Logistic Regression on 10 baseline features (AUC = {best['auc']:.4f})",
-                styles['BodyText']
-            ))
-            self.elements.append(Paragraph(
-                f"<b>Optimal Threshold:</b> {best['optimal_threshold']:.3f} — reject loans with default probability > {best['optimal_threshold']:.1%}",
-                styles['BodyText']
-            ))
-            self.elements.append(Paragraph(
-                f"<b>Portfolio Profit:</b> ${best['optimal_profit']:,.0f} on the test set",
-                styles['BodyText']
-            ))
-            self.elements.append(Paragraph(
-                "<b>Lift over Approve-All Baseline:</b> 22.3% improvement",
-                styles['BodyText']
-            ))
         self.elements.append(PageBreak())
 
-    def add_results_highlights(self):
+    def add_debugging_and_experiments(self):
         styles = self.styles
         
-        # 1. Small Metrics Table
-        self.elements.append(Paragraph("Model Performance Highlights", styles['SectionHeader']))
+        # The Failures & Fixes (From TODO.md)
+        self.elements.append(Paragraph("3. Debugging & Iteration", styles['SectionHeader']))
+        
+        self.elements.append(Paragraph("<b>Target Leakage:</b> Initial models trained with a suspicious 0.9999 AUC.", styles['BodyText']))
+        self.elements.append(Paragraph(
+            "I identified 25 payment/collection columns (e.g., 'total_pymnt', 'recoveries') that were leaking the target. "
+            "After implementing a pattern-based removal function, the AUC dropped to a realistic 0.6671, confirming the leakage was resolved.",
+            styles['BodyText']
+        ))
+        self.elements.append(Spacer(1, 0.2 * inch))
+
+        self.elements.append(Paragraph("<b>Feature Dependency Failures:</b> The feature engineering pipeline initially failed due to missing columns.", styles['BodyText']))
+        self.elements.append(Paragraph(
+            "The 'installment' and 'inq_last_6mths' columns were not available, causing the pipeline to crash. "
+            "I removed these dependencies and recalculated the features to successfully generate all 4 plans.",
+            styles['BodyText']
+        ))
+        self.elements.append(Spacer(1, 0.2 * inch))
+
+        self.elements.append(Paragraph("<b>Baseline Validation:</b> To measure value added, I compared the model against 8 heuristic strategies.", styles['BodyText']))
+        self.elements.append(Paragraph(
+            "Strategies included: Approve-All, Reject-All, Fixed Thresholds (0.30, 0.50, 0.70), Grade-Based, DTI-Based, and FICO-Based. "
+            "This helped contextualize the model's financial performance against simple rules.",
+            styles['BodyText']
+        ))
+        self.elements.append(PageBreak())
+
+    def add_results_and_takeaways(self):
+        styles = self.styles
+        
+        # Metrics Table
+        self.elements.append(Paragraph("4. Results", styles['SectionHeader']))
         
         if self.data.model_metrics is not None:
             df = self.data.model_metrics
             table_data = [["Feature Plan", "Model", "AUC", "Brier", "Optimal\nThreshold", "Optimal\nProfit"]]
             for _, row in df.iterrows():
                 plan = row['plan'].replace('_', ' ').title()
+                if plan in ['Mi Informed', 'Ml Informed']: plan = 'ML Informed'
                 model = "Logistic Regression" if row['model_type'] == 'lr' else "Random Forest"
                 profit_str = f"${row['optimal_profit']:,.0f}"
                 if row['optimal_profit'] == df['optimal_profit'].max():
@@ -227,12 +254,18 @@ class SummaryGenerator:
             t.setStyle(TableStyle([('BACKGROUND', (0, best_idx+1), (-1, best_idx+1), colors.lightblue)]))
             
             self.elements.append(t)
+            self.elements.append(Spacer(1, 0.1 * inch))
+            self.elements.append(Paragraph(
+                "<i>Table 1: Model performance across all plans. Best model highlighted.</i>",
+                styles['Caption']
+            ))
             self.elements.append(Spacer(1, 0.3 * inch))
 
-        # 2. Confusion Matrix (Business Decision Visual)
-        self.elements.append(Paragraph("Business Decision Profile", styles['SectionHeader']))
+        # Confusion Matrix
+        self.elements.append(Paragraph("Business Decision Profile", styles['SubsectionHeader']))
         self.elements.append(Paragraph(
-            "At the optimal threshold of 0.620, the model makes the following trade-off:",
+            "At the optimal threshold of 0.620, the model approved 268,935 loans and declined 29. "
+            "This illustrates that the threshold is highly conservative, only rejecting loans when default risk is severe.",
             styles['BodyText']
         ))
         self.elements.append(Spacer(1, 0.1 * inch))
@@ -242,16 +275,17 @@ class SummaryGenerator:
             img = Image(str(cm_path), width=5*inch, height=4*inch)
             self.elements.append(img)
             self.elements.append(Paragraph(
-                "<i>Figure 1: Confusion matrix at the optimal threshold.</i>",
+                "<i>Figure 1: Confusion matrix at optimal threshold (0.620).</i>",
                 styles['Caption']
             ))
         self.elements.append(Spacer(1, 0.2 * inch))
 
-        # 3. Final Takeaway
-        self.elements.append(Paragraph("Takeaway", styles['SectionHeader']))
+        # Final Takeaways
+        self.elements.append(Paragraph("5. Key Takeaways", styles['SectionHeader']))
         self.elements.append(Paragraph(
-            "The threshold, not the model alone, drives profitability. A well-calibrated model with moderate AUC "
-            "can outperform a higher-AUC model if its probabilities are reliable for financial decision-making.",
+            "The threshold, not the model alone, drives profitability. A well-calibrated Logistic Regression (AUC 0.6671) "
+            "outperformed a higher-AUC Random Forest (0.7001) in total profit, reinforcing that calibration matters more than raw discrimination "
+            "when making financial decisions.",
             styles['BodyText']
         ))
         self.elements.append(Spacer(1, 0.2 * inch))
@@ -266,7 +300,7 @@ class SummaryGenerator:
 
 def main():
     print("="*60)
-    print("GENERATING 3-PAGE PORTFOLIO SUMMARY")
+    print("GENERATING 4-PAGE PROCESS SUMMARY")
     print("="*60)
     
     data = SummaryData()
@@ -284,7 +318,7 @@ def main():
     )
     doc.build(generator.elements)
     
-    print(f"\n✓ Summary generated successfully!")
+    print(f"\n✓ Process summary generated successfully!")
     print(f"  Output: {SummaryConfig.OUTPUT_FILENAME}")
     print("\n" + "="*60)
 
