@@ -6,6 +6,22 @@ A data science project that asks a simple question: *which loan applicants shoul
 
 ---
 
+## 📊 Key Results (Test Set: 2016–2018)
+
+| Metric | Value |
+| :--- | :--- |
+| **Best Model** | Logistic Regression (AUC: 0.6671) |
+| **Optimal Approval Threshold** | 0.620 |
+| **Approve-All Strategy (Baseline)** | -$331.9M (Loss) |
+| **Optimal Threshold Strategy** | -$331.6M (Loss) |
+| **Loss Reduction vs. Approve-All** | **+$280k** |
+
+> **Note:** The 2016–2018 period had negative returns overall. The optimal threshold reduced portfolio losses by $280k compared to an approve-all strategy, validating the framework even in adverse credit cycles.
+
+**[View the Full Academic Report](credit_threshold_profit_report.pdf)** | **[View the LinkedIn Executive Brief](credit_threshold_linkedin_brief.pdf)**
+
+---
+
 ## The Problem
 
 Credit models typically predict the probability that a borrower will default. But a prediction alone doesn't make a decision. Somewhere, someone picks a cutoff: above this probability, reject. Below it, approve.
@@ -24,8 +40,8 @@ Using publicly available LendingClub loan data, this project:
 
 1. Trains a probabilistic classifier to estimate default likelihood for each loan
 2. Simulates what would have happened under different approval thresholds
-3. Calculates the total net profit (total payments received minus funded amounts) at each threshold
-4. Identifies the threshold that would have maximized portfolio profit
+3. Calculates the total net cash flow (`total_received - funded_amount`) at each threshold
+4. Identifies the threshold that maximizes portfolio value
 
 The core output is a **profit curve** — a single visualization showing how portfolio-level net return changes as the approval cutoff moves from conservative to aggressive, with the optimal point clearly marked.
 
@@ -35,7 +51,7 @@ The core output is a **profit curve** — a single visualization showing how por
 
 | Typical Student Project | This Project |
 |-------------------------|--------------|
-| "Model achieved 0.82 AUC" | "At this threshold, net profit improves by X% over baseline" |
+| "Model achieved 0.82 AUC" | "At this threshold, loss reduced by $280k" |
 | Optimizes for accuracy | Optimizes for a business outcome |
 | Stops at probability predictions | Asks what happens when predictions become decisions |
 | ROC curve is the final deliverable | Profit curve is the final deliverable |
@@ -51,9 +67,8 @@ This project is a **retrospective simulation** using historical data where loan 
 **In scope:**
 - Probability of default modeling with calibrated estimates
 - Threshold sweeping and portfolio-level profit calculation
-- Bootstrap confidence intervals around estimated profit lift
-- Comparison against simple baseline strategies (approve all, fixed-threshold rules)
-- A basic stress test: how does the optimal threshold shift if default rates rise?
+- Comparison against 8 baseline strategies (approve-all, fixed-threshold, domain heuristics)
+- Target leakage detection and removal
 
 **Out of scope:**
 - Predicting loss given default or exposure at default separately (realized cash flows are used)
@@ -64,9 +79,15 @@ This project is a **retrospective simulation** using historical data where loan 
 
 ---
 
-## Data
+## 🧠 Hard Lessons Learned (Data Integrity)
 
-LendingClub publicly available loan data (pre-2023), accessible through Kaggle and other sources. Each loan record includes borrower characteristics at application and final loan status (fully paid, charged off, etc.), allowing ex-post profit calculation.
+**Target Leakage Detection:**
+Initial models achieved an **AUC of 0.9999**—a clear sign of target leakage. I identified 25 payment/collection columns (e.g., `total_pymnt`, `recoveries`, `last_pymnt_d`) that contained post-origination information.
+
+**Resolution:**
+I implemented a pattern-based removal function to systematically exclude these features. After removal, AUC dropped from **0.9999 to a realistic 0.6671**, confirming the leakage was effectively fixed.
+
+This experience reinforced that data integrity is just as important as model selection.
 
 ---
 
@@ -121,21 +142,51 @@ Acknowledging these constraints is important. The value here is in the framework
 
 ## Why This Project Exists
 
-The goal is to practice connecting machine learning outputs to business decisions. In finance data science, the model is rarely the end product — it's an input to a decision process that has financial consequences. This project is an exercise in following that thread all the way to the bottom line.
+The goal is to demonstrate how predictive models translate into tangible financial value—proving that a well-calibrated linear model can outperform a complex black-box when the objective is profit, not accuracy.
 
 ---
 
 ## Setup
 
 ```bash
-git clone https://github.com/yourusername/credit-threshold-profit.git
+git clone https://github.com/kira-ml/credit-threshold-profit.git
 cd credit-threshold-profit
 pip install -r requirements.txt
 ```
 
 Run the main analysis:
 ```bash
-jupyter notebook threshold_profit_analysis.ipynb
+python src/model_training.py
+python src/baseline_validation.py
+python src/generate_report.py
+python src/generate_summary.py
+```
+
+---
+
+## 📂 File Structure
+
+```
+credit-threshold-profit/
+├── credit_threshold_profit_report.pdf      # 15-page academic report
+├── credit_threshold_linkedin_brief.pdf     # 4-page LinkedIn executive brief
+├── README.md
+├── TODO.md
+├── data/
+│   └── processed/                          # Engineered Parquet files
+├── src/
+│   ├── baseline_cleaning.py
+│   ├── profit_calculator.py
+│   ├── data_preprocessing.py
+│   ├── feature_engineering.py
+│   ├── model_training.py
+│   ├── baseline_validation.py
+│   ├── generate_report.py
+│   ├── generate_summary.py
+│   └── visualization.py
+└── reports/
+    ├── model_comparison/                   # Metrics, predictions, models
+    └── visualizations/                     # Calibration curve, confusion matrix
 ```
 
 ---
