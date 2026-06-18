@@ -166,44 +166,52 @@ class ReportGenerator:
         self.page_4_limitations_and_validation()
         
     def page_1_hero(self):
-        """Page 1: Title, Author, Core Finding, and Confusion Matrix (Fixed Layout)."""
+        """Page 1: Title, Author, Core Finding, and Confusion Matrix (Guaranteed Layout)."""
         styles = self.styles
         
-        # --- TITLE BLOCK (Centered, Safe Spacing) ---
-        self.elements.append(Spacer(1, 1.0 * inch))  # Reduced from 1.5" to prevent clipping
+        # --- TITLE BLOCK ---
+        self.elements.append(Spacer(1, 0.7 * inch))
         self.elements.append(Paragraph("Profit-Driven Credit Approval", styles['ReportTitle']))
         self.elements.append(Paragraph("Thresholding", styles['ReportTitle']))
         self.elements.append(Spacer(1, 0.1 * inch))
         self.elements.append(Paragraph("From Predictions to Portfolio Outcomes", styles['ReportSubtitle']))
-        self.elements.append(Spacer(1, 0.4 * inch))
+        self.elements.append(Spacer(1, 0.5 * inch))
         
-        # --- CORE FINDING (Callout Box) ---
+        # --- CORE FINDING ---
         if self.best_model is not None:
             profit_str = f"${self.best_model['optimal_profit']:,.0f}"
-            # We draw the box manually here with a table to ensure it centers perfectly
             callout_text = f"Optimal Threshold: {self.best_model['optimal_threshold']:.3f} | Generated {profit_str} Net Cash Flow"
             box = CalloutBox(callout_text, styles['CalloutBox'])
             self.elements.append(box)
         self.elements.append(Spacer(1, 0.3 * inch))
         
-        # --- AUTHOR & DATE ---
-        self.elements.append(Paragraph("Ken Ira Lacson Talingting", 
-            ParagraphStyle(name='AuthorName', parent=styles['Normal'], fontSize=14, 
-                           textColor=Config.PRIMARY_COLOR, alignment=TA_CENTER)))
-        self.elements.append(Paragraph("Data Science Project", 
-            ParagraphStyle(name='AuthorInfo', parent=styles['Normal'], fontSize=12, 
-                           textColor=Config.GRAY, alignment=TA_CENTER)))
-        self.elements.append(Paragraph(datetime.now().strftime("%B %d, %Y"), 
-            ParagraphStyle(name='DateStyle', parent=styles['Normal'], fontSize=12, 
-                           textColor=Config.GRAY, alignment=TA_CENTER)))
-        
+        # --- AUTHOR & DATE (GUARANTEED VERTICAL STACK) ---
+        # We use an inner Table to force three separate lines (Name, Title, Date)
+        author_data = [
+            [Paragraph("Ken Ira Lacson Talingting", 
+                ParagraphStyle(name='AuthorName', parent=styles['Normal'], fontSize=14, 
+                               textColor=Config.PRIMARY_COLOR, alignment=TA_CENTER))],
+            [Paragraph("Data Science Project", 
+                ParagraphStyle(name='AuthorInfo', parent=styles['Normal'], fontSize=12, 
+                               textColor=Config.GRAY, alignment=TA_CENTER))],
+            [Paragraph("June 19, 2026", 
+                ParagraphStyle(name='DateStyle', parent=styles['Normal'], fontSize=12, 
+                               textColor=Config.GRAY, alignment=TA_CENTER))]
+        ]
+        author_table = Table(author_data, colWidths=[6.5*inch])
+        author_table.setStyle(TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('TOPPADDING', (0,0), (-1,-1), 2),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 2),
+        ]))
+        self.elements.append(author_table)
         self.elements.append(Spacer(1, 0.3 * inch))
         
-        # --- CONFUSION MATRIX (Centered) ---
+        # --- CONFUSION MATRIX (FORCED TO STAY ON PAGE 1) ---
         cm_path = Path("reports/visualizations/confusion_matrix.png")
         if cm_path.exists():
-            # Center the image by adding left/right spacers (optional, but ensures it doesn't shift)
-            img = Image(str(cm_path), width=6.0*inch, height=4.2*inch)
+            img = Image(str(cm_path), width=6.5*inch, height=4.5*inch)
             self.elements.append(img)
             self.elements.append(Paragraph(
                 "<i>Figure 1: Approval decisions at the optimal threshold (0.620).</i>",
@@ -212,9 +220,10 @@ class ReportGenerator:
         self.elements.append(PageBreak())
 
     def page_2_methodology_and_calibration(self):
-        """Page 2: Methodology, Calibration Curve, and Transparency."""
+        """Page 2: Methodology, Calibration Curve, and Transparency (Fixed Spacing)."""
         styles = self.styles
         
+        # Remove the large top spacer so Page 2 starts immediately with text
         self.elements.append(Paragraph("Methodology & Validation", styles['SectionHeader']))
         
         # Pipeline (Left Column)
