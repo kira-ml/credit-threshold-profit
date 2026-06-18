@@ -280,7 +280,7 @@ class ReportGenerator:
                 if plan in ['Mi Informed', 'Ml Informed']: plan = 'ML Informed'
                 model = "Logistic Regression" if row['model_type'] == 'lr' else "Random Forest"
                 
-                # FIX: Ensure we pass a Paragraph object, not a raw string, for bold text
+                # Fix: Ensure we pass a Paragraph object, not a raw string, for bold text
                 profit_str = f"${row['optimal_profit']:,.0f}"
                 if row['optimal_profit'] == df['optimal_profit'].max():
                     profit_cell = Paragraph(f"<b>{profit_str}</b>", styles['TableCell'])
@@ -311,8 +311,26 @@ class ReportGenerator:
             ))
             self.elements.append(Spacer(1, 0.3 * inch))
 
-        # Confusion Matrix & Calibration Context
-        self.elements.append(Paragraph("4.1 Business Decision Profile", styles['SubsectionHeader']))
+        # 4.1 Decision Validation (Calibration Curve + Confusion Matrix)
+        self.elements.append(Paragraph("4.1 Decision Validation", styles['SubsectionHeader']))
+        self.elements.append(Paragraph(
+            "To validate the reliability of the probability estimates, I examined the calibration of the best model. "
+            "A well-calibrated model closely follows the diagonal in a reliability diagram.",
+            styles['BodyText']
+        ))
+        self.elements.append(Spacer(1, 0.1 * inch))
+
+        # --- INSERT CALIBRATION CURVE ---
+        cal_path = Path("reports/visualizations/calibration_curve.png")
+        if cal_path.exists():
+            img = Image(str(cal_path), width=5.5*inch, height=4*inch)
+            self.elements.append(img)
+            self.elements.append(Paragraph(
+                "<i>Figure 1: Calibration curve (reliability diagram) for the best model.</i>",
+                styles['Caption']
+            ))
+            self.elements.append(Spacer(1, 0.2 * inch))
+
         self.elements.append(Paragraph(
             "At the optimal threshold of 0.620, the model approved 268,935 loans and declined 29. "
             "The high approval rate reflects the model's conservative nature: it only rejects loans when default risk is severe. "
@@ -326,7 +344,7 @@ class ReportGenerator:
             img = Image(str(cm_path), width=5.5*inch, height=4*inch)
             self.elements.append(img)
             self.elements.append(Paragraph(
-                "<i>Figure 1: Business decisions at the optimal threshold.</i>",
+                "<i>Figure 2: Business decisions at the optimal threshold.</i>",
                 styles['Caption']
             ))
         self.elements.append(PageBreak())
